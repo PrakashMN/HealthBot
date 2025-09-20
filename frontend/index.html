@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Public Health Chatbot - Comprehensive System Overview</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/frontend/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <h1><i class="fas fa-robot"></i> AI-Driven Public Health Chatbot</h1>
+            <p class="subtitle">Empowering Rural and Semi-Urban Communities with Intelligent Healthcare Assistance</p>
+            
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showSection('overview')">
+                    <i class="fas fa-home"></i> Overview
+                </button>
+                <button class="nav-tab" onclick="showSection('architecture')">
+                    <i class="fas fa-sitemap"></i> Architecture
+                </button>
+                <button class="nav-tab" onclick="showSection('features')">
+                    <i class="fas fa-star"></i> Features
+                </button>
+                <button class="nav-tab" onclick="showSection('prototype')">
+                    <i class="fas fa-comments"></i> Prototype
+                </button>
+                <button class="nav-tab" onclick="showSection('dashboard')">
+                    <i class="fas fa-chart-bar"></i> Analytics
+                </button>
+                <button class="nav-tab" onclick="showSection('implementation')">
+                    <i class="fas fa-road"></i> Roadmap
+                </button>
+                <button class="nav-tab" onclick="showSection('technical')">
+                    <i class="fas fa-cogs"></i> Technical
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Overview Section -->
+        <div id="overview" class="section active">
+            <h2 class="section-title">
+                <i class="fas fa-bullseye"></i>
+                Project Overview
+            </h2>
+            
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <h3><i class="fas fa-flag"></i> Mission Statement</h3>
+                    <p>To democratize healthcare access by providing AI-powered, multilingual health assistance to underserved rural and semi-urban populations, bridging the gap between communities and quality healthcare information.</p>
+                    <div class="metric-highlight">80% Accuracy Target</div>
+                </div>
+
+                <div class="overview-card">
+                    <h3><i class="fas fa-users"></i> Target Audience</h3>
+                    <p>Rural and semi-urban populations with limited access to healthcare professionals, focusing on communities with basic smartphone access and internet connectivity.</p>
+                    <div class="metric-highlight">20% Awareness Increase</div>
+                </div>
+
+                <div class="overview-card">
+                    <h3><i class="fas fa-trophy"></i> Key Objectives</h3>
+                    <ul style="margin-top: 1rem; padding-left: 1rem;">
+                        <li>Provide 24/7 health consultation access</li>
+                        <li>Deliver multilingual health education</li>
+                        <li>Enable early disease detection</li>
+                        <li>Facilitate vaccination tracking</li>
+                        <li>Offer emergency response guidance</li>
+                    </ul>
+                </div>
+
+                <div class="overview-card">
+                    <h3><i class="fas fa-globe"></i> Impact Goals</h3>
+                    <p>Reach 1 million users across 5 regional languages, reduce healthcare misinformation by 40%, and improve preventive care adoption by 25% within the first year of deployment.</p>
+                    <div class="metric-highlight">1M+ Users Target</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture Section -->
+        <div id="architecture" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-sitemap"></i>
+                System Architecture
+            </h2>
+            
+            <div class="architecture-container">
+                <div class="architecture-grid">
+                    <div class="arch-component" onclick="highlightComponent(this)">
+                        <i class="fas fa-brain"></i>
+                        <h4>NLP Processing Layer</h4>
+                        <p>Rasa/Dialogflow integration with custom health domain training for accurate intent recognition and response generation</p>
+                    </div>
+
+                    <div class="arch-component" onclick="highlightComponent(this)">
+                        <i class="fas fa-database"></i>
+                        <h4>Government Health Database</h4>
+                        <p>RESTful API integration with official health databases for real-time disease surveillance and health statistics</p>
+                    </div>
+
+                    <div class="arch-component" onclick="highlightComponent(this)">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h4>Multi-Channel Communication</h4>
+                        <p>WhatsApp Business API, SMS integration via Twilio for maximum reach across different user preferences</p>
+                    </div>
+
+                    <div class="arch-component" onclick="highlightComponent(this)">
+                        <i class="fas fa-bell"></i>
+                        <h4>Real-time Alert System</h4>
+                        <p>Push notification service for outbreak alerts, vaccination reminders, and emergency health advisories</p>
+                    </div>
+
+                    <div class="arch-component" onclick="highlightComponent(this)">
+                        <i class="fas fa-cloud"></i>
+                        <h4>Cloud Infrastructure</h4>
+                        <p>AWS/Azure/GCP deployment with auto-scaling, load balancing, and containerized microservices architecture</p>
+                    </div>
+
+                    <div class="arch-component" onclick="highlightComponent(this)">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Analytics Dashboard</h4>
+                        <p>Real-time monitoring with Prometheus/Grafana for system performance, user engagement, and health impact metrics</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div id="features" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-star"></i>
+                Key Features
+            </h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-language"></i> Multilingual Support</h4>
+                    <p>Native support for Hindi, English, Bengali, Tamil, Telugu, and Marathi with automatic language detection and seamless switching capabilities.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-stethoscope"></i> Disease Symptom Checker</h4>
+                    <p>AI-powered symptom analysis with decision tree logic to provide preliminary health assessments and recommend appropriate action levels.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-syringe"></i> Vaccination Schedule Tracker</h4>
+                    <p>Personalized vaccination reminders for children and adults, integrated with government immunization schedules and outbreak-specific vaccines.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-heart"></i> Preventive Healthcare Tips</h4>
+                    <p>Daily health tips, seasonal disease prevention advice, and lifestyle recommendations tailored to regional health challenges and climate conditions.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Outbreak Alerts</h4>
+                    <p>Real-time notifications about disease outbreaks, epidemiological updates, and location-specific health advisories from official health authorities.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-phone-alt"></i> Emergency Contact Integration</h4>
+                    <p>Quick access to emergency services, nearby healthcare facilities, and telemedicine consultations with automatic location-based recommendations.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-file-medical"></i> Health Record Management</h4>
+                    <p>Secure digital health records with vaccination history, medication tracking, and appointment scheduling with privacy-first architecture.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4><i class="fas fa-shield-alt"></i> Privacy & Security</h4>
+                    <p>End-to-end encryption, HIPAA compliance, and data minimization principles to ensure user privacy and regulatory compliance.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chatbot Prototype Section -->
+        <div id="prototype" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-comments"></i>
+                Interactive Chatbot Prototype
+            </h2>
+            
+            <div class="language-selector">
+                <button class="lang-btn active" onclick="switchLanguage('en')">English</button>
+                <button class="lang-btn" onclick="switchLanguage('hi')">हिंदी</button>
+                <button class="lang-btn" onclick="switchLanguage('bn')">বাংলা</button>
+                <button class="lang-btn" onclick="switchLanguage('ta')">தமிழ்</button>
+                <button class="lang-btn" onclick="switchLanguage('te')">తెలుగు</button>
+            </div>
+
+            <div class="chatbot-container">
+                <div class="chatbot-interface">
+                    <div class="chat-header">
+                        <div class="status"></div>
+                        <div>
+                            <h4>HealthBot Assistant</h4>
+                            <small>Online • Multilingual Support Available</small>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message bot">
+                            <strong>HealthBot:</strong> Hello! I'm your AI health assistant. I can help you with symptoms, vaccination schedules, preventive care, and emergency guidance. How can I assist you today?
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <div class="quick-action" onclick="quickAction('symptoms')">Check Symptoms</div>
+                        <div class="quick-action" onclick="quickAction('vaccine')">Vaccination Info</div>
+                        <div class="quick-action" onclick="quickAction('prevention')">Preventive Tips</div>
+                        <div class="quick-action" onclick="quickAction('emergency')">Emergency Help</div>
+                    </div>
+                    
+                    <div class="chat-input-area">
+                        <input type="text" class="chat-input" id="chatInput" placeholder="Type your health question here..." onkeypress="handleEnter(event)">
+                        <button class="send-btn" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Dashboard Section -->
+        <div id="dashboard" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-bar"></i>
+                Data Integration Dashboard
+            </h2>
+            
+            <div class="dashboard-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">User Engagement Metrics</h3>
+                    <canvas id="engagementChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="chart-title">Query Categories Distribution</h3>
+                    <canvas id="categoryChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="chart-title">Response Accuracy Over Time</h3>
+                    <canvas id="accuracyChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="chart-title">Regional Usage Statistics</h3>
+                    <canvas id="regionalChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Implementation Roadmap Section -->
+        <div id="implementation" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-road"></i>
+                Implementation Roadmap
+            </h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Phase 1: Core Chatbot Development</h4>
+                        <p>NLP model training, basic conversation flows, symptom checker logic, and initial multilingual support implementation.</p>
+                        <div class="timeline-duration">Duration: 3 months</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Phase 2: Government API Integration</h4>
+                        <p>Integration with official health databases, real-time disease surveillance data, and vaccination schedule synchronization.</p>
+                        <div class="timeline-duration">Duration: 2 months</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Phase 3: Multi-Channel Deployment</h4>
+                        <p>WhatsApp Business API integration, SMS service setup, mobile app development, and cross-platform testing.</p>
+                        <div class="timeline-duration">Duration: 2 months</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Phase 4: Analytics and Optimization</h4>
+                        <p>Performance monitoring implementation, user feedback integration, AI model refinement, and scalability optimization.</p>
+                        <div class="timeline-duration">Duration: 1 month</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <div class="metric-highlight" style="font-size: 1.2rem;">Total Implementation Timeline: 8 Months</div>
+            </div>
+        </div>
+
+        <!-- Technical Specifications Section -->
+        <div id="technical" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-cogs"></i>
+                Technical Specifications
+            </h2>
+            
+            <div class="tech-grid">
+                <div class="tech-category">
+                    <h4><i class="fas fa-code"></i> Programming Languages</h4>
+                    <ul class="tech-list">
+                        <li>Python (Backend, NLP)</li>
+                        <li>JavaScript (Frontend)</li>
+                        <li>TypeScript (Type Safety)</li>
+                        <li>SQL (Database Queries)</li>
+                    </ul>
+                </div>
+
+                <div class="tech-category">
+                    <h4><i class="fas fa-layer-group"></i> Frameworks & Libraries</h4>
+                    <ul class="tech-list">
+                        <li>Rasa (NLP Framework)</li>
+                        <li>React (Frontend UI)</li>
+                        <li>Node.js (Backend API)</li>
+                        <li>FastAPI (Python Backend)</li>
+                        <li>TensorFlow (ML Models)</li>
+                    </ul>
+                </div>
+
+                <div class="tech-category">
+                    <h4><i class="fas fa-database"></i> Databases & Storage</h4>
+                    <ul class="tech-list">
+                        <li>PostgreSQL (Primary Database)</li>
+                        <li>Redis (Caching & Sessions)</li>
+                        <li>MongoDB (Document Storage)</li>
+                        <li>AWS S3 (File Storage)</li>
+                    </ul>
+                </div>
+
+                <div class="tech-category">
+                    <h4><i class="fas fa-plug"></i> APIs & Integrations</h4>
+                    <ul class="tech-list">
+                        <li>WhatsApp Business API</li>
+                        <li>Twilio SMS Gateway</li>
+                        <li>Government Health APIs</li>
+                        <li>Google Translate API</li>
+                        <li>Firebase Push Notifications</li>
+                    </ul>
+                </div>
+
+                <div class="tech-category">
+                    <h4><i class="fas fa-cloud"></i> Cloud & DevOps</h4>
+                    <ul class="tech-list">
+                        <li>Docker (Containerization)</li>
+                        <li>Kubernetes (Orchestration)</li>
+                        <li>AWS/Azure/GCP</li>
+                        <li>GitHub Actions (CI/CD)</li>
+                        <li>Terraform (Infrastructure)</li>
+                    </ul>
+                </div>
+
+                <div class="tech-category">
+                    <h4><i class="fas fa-chart-line"></i> Monitoring & Analytics</h4>
+                    <ul class="tech-list">
+                        <li>Prometheus (Metrics)</li>
+                        <li>Grafana (Dashboards)</li>
+                        <li>ELK Stack (Logging)</li>
+                        <li>Google Analytics</li>
+                        <li>Sentry (Error Tracking)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="background: var(--bg-light); padding: 2rem; border-radius: 15px; margin-top: 2rem;">
+                <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
+                    <i class="fas fa-shield-alt"></i> Security & Compliance
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                    <div>
+                        <h4>Data Protection</h4>
+                        <ul class="tech-list">
+                            <li>End-to-end encryption</li>
+                            <li>GDPR compliance</li>
+                            <li>HIPAA compliance</li>
+                            <li>Data anonymization</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Infrastructure Security</h4>
+                        <ul class="tech-list">
+                            <li>SSL/TLS encryption</li>
+                            <li>OAuth 2.0 authentication</li>
+                            <li>API rate limiting</li>
+                            <li>DDoS protection</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Branding -->
+    <div class="kuse-branding" onclick="window.open('https://kuse.ai', '_blank')">
+        made with PMN
+
+    </div>
+    <script src="/frontend/app.js"></script>
+
+    <!-- Kuse Inner Script -->
+    <script src="https://cdn.kuse.ai/sdk.prd.js"></script>
+</body>
+</html>
