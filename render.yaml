@@ -1,0 +1,22 @@
+services:
+  # Backend Service (Docker)
+  - type: web
+    name: backend
+    runtime: docker
+    repo: https://github.com/PrakashMN/HealthBot
+    region: singapore
+    plan: free
+    dockerfile: ./backend/Dockerfile
+    healthCheckPath: /
+
+  # Frontend Service (Static Site)
+  - type: static
+    name: frontend
+    repo: https://github.com/PrakashMN/HealthBot
+    region: singapore
+    plan: free
+    rootDir: frontend
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
