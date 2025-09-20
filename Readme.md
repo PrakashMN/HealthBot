@@ -81,5 +81,9 @@ Contributions from the team are welcome! Please follow this simple workflow:
 
 ## 👥 Authors
 
-* (Your Name)
-* (Your Friend's Name)
+* Prakash Nagaral
+* _______________
+* _______________
+* _______________
+* _______________
+* _______________
