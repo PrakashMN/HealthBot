@@ -10,7 +10,7 @@ services:
     healthCheckPath: /
 
   # Frontend Service (Static Site)
-  - type: static
+  - type: static_site
     name: frontend
     repo: https://github.com/PrakashMN/HealthBot
     region: singapore
