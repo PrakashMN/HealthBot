@@ -82,8 +82,8 @@ Contributions from the team are welcome! Please follow this simple workflow:
 ## 👥 Authors
 
 * Prakash Nagaral
-* _______________
-* _______________
-* _______________
-* _______________
-* _______________
+* ____
+* ____
+* ____
+* ____
+* ____
