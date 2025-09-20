@@ -1,5 +1,4 @@
 services:
-  # Backend Service (Docker)
   - type: web
     name: backend
     runtime: docker
@@ -8,8 +7,6 @@ services:
     plan: free
     dockerfile: ./backend/Dockerfile
     healthCheckPath: /
-
-  # Frontend Service (Static Site)
   - type: static
     name: frontend
     repo: https://github.com/PrakashMN/HealthBot
