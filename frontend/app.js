@@ -1,199 +1,723 @@
-        // Global variables
+// Global variables
         let currentLanguage = `en`;
         let chatHistory = [];
+        let messageCount = 0;
+        let soundEnabled = true;
+        let isTyping = false;
 
         // Language translations
         const translations = {
             en: {
-                greeting: `Hello! I'm your AI health assistant. How can I help you today?`,
-                symptoms: `I can help you check your symptoms. Please describe what you're experiencing.`,
-                vaccine: `I can provide vaccination information. What would you like to know?`,
-                prevention: `Here are some preventive healthcare tips for staying healthy.`,
-                emergency: `This seems like an emergency. Please call your local emergency services immediately.`
+                greeting: `Hello! 👋 I'm your AI health assistant. I can help you with symptoms, vaccination schedules, preventive care, and emergency guidance. How can I assist you today?`,
+                symptoms: `I can help you check your symptoms. Please describe what you're experiencing, and I'll provide guidance based on medical knowledge.`,
+                vaccine: `I can provide vaccination information for all age groups. What specific vaccination information do you need?`,
+                prevention: `I'll share important preventive healthcare tips to help you stay healthy. What area would you like to focus on?`,
+                emergency: `This appears to be an emergency situation. I'm providing immediate guidance and emergency contacts.`
             },
             hi: {
-                greeting: `नमस्ते! मैं आपका AI स्वास्थ्य सहायक हूं। आज मैं आपकी कैसे मदद कर सकता हूं?`,
-                symptoms: `मैं आपके लक्षणों की जांच में मदद कर सकता हूं। कृपया बताएं कि आप क्या महसूस कर रहे हैं।`,
-                vaccine: `मैं टीकाकरण की जानकारी प्रदान कर सकता हूं। आप क्या जानना चाहते हैं?`,
-                prevention: `स्वस्थ रहने के लिए यहां कुछ निवारक स्वास्थ्य सुझाव हैं।`,
-                emergency: `यह एक आपातकाल लगता है। कृपया तुरंत अपनी स्थानीय आपातकालीन सेवाओं को कॉल करें।`
+                greeting: `नमस्ते! 👋 मैं आपका AI स्वास्थ्य सहायक हूं। मैं लक्षणों, टीकाकरण कार्यक्रम, निवारक देखभाल और आपातकालीन मार्गदर्शन में आपकी सहायता कर सकता हूं। आज मैं आपकी कैसे मदद कर सकता हूं?`,
+                symptoms: `मैं आपके लक्षणों की जांच में मदद कर सकता हूं। कृपया बताएं कि आप क्या महसूस कर रहे हैं, और मैं चिकित्सा ज्ञान के आधार पर मार्गदर्शन प्रदान करूंगा।`,
+                vaccine: `मैं सभी आयु समूहों के लिए टीकाकरण की जानकारी प्रदान कर सकता हूं। आपको किस विशिष्ट टीकाकरण जानकारी की आवश्यकता है?`,
+                prevention: `मैं आपको स्वस्थ रहने में मदद करने के लिए महत्वपूर्ण निवारक स्वास्थ्य सुझाव साझा करूंगा। आप किस क्षेत्र पर ध्यान देना चाहते हैं?`,
+                emergency: `यह एक आपातकालीन स्थिति प्रतीत होती है। मैं तत्काल मार्गदर्शन और आपातकालीन संपर्क प्रदान कर रहा हूं।`
             },
             bn: {
-                greeting: `হ্যালো! আমি আপনার AI স্বাস্থ্য সহায়ক। আজ আমি কীভাবে আপনাকে সাহায্য করতে পারি?`,
-                symptoms: `আমি আপনার উপসর্গ পরীক্ষা করতে সাহায্য করতে পারি। আপনি কী অনুভব করছেন তা বর্ণনা করুন।`,
-                vaccine: `আমি টিকাদানের তথ্য প্রদান করতে পারি। আপনি কী জানতে চান?`,
-                prevention: `সুস্থ থাকার জন্য এখানে কিছু প্রতিরোধমূলক স্বাস্থ্যসেবা টিপস রয়েছে।`,
-                emergency: `এটি একটি জরুরি অবস্থা বলে মনে হচ্ছে। অনুগ্রহ করে অবিলম্বে আপনার স্থানীয় জরুরি সেবায় কল করুন।`
+                greeting: `হ্যালো! 👋 আমি আপনার AI স্বাস্থ্য সহায়ক। আমি উপসর্গ, টিকাদান সূची, প্রতিরোধমূলক যত্ন এবং জরুরি নির্দেশনায় আপনাকে সাহায্য করতে পারি। আজ আমি কীভাবে আপনাকে সাহায্য করতে পারি?`,
+                symptoms: `আমি আপনার উপসর্গ পরীক্ষা করতে সাহায্য করতে পারি। আপনি কী অনুভব করছেন তা বর্ণনা করুন, এবং আমি চিকিৎসা জ্ঞানের ভিত্তিতে নির্দেশনা প্রদান করব।`,
+                vaccine: `আমি সব বয়সের জন্য টিকাদানের তথ্য প্রদান করতে পারি। আপনার কোন নির্দিষ্ট টিকাদানের তথ্য প্রয়োজন?`,
+                prevention: `আমি আপনাকে সুস্থ থাকতে সাহায্য করার জন্য গুরুত্বপূর্ণ প্রতিরোধমূলক স্বাস্থ্যসেবা টিপস শেয়ার করব। আপনি কোন ক্ষেত্রে মনোযোগ দিতে চান?`,
+                emergency: `এটি একটি জরুরি পরিস্থিতি বলে মনে হচ্ছে। আমি তাৎক্ষণিক নির্দেশনা এবং জরুরি যোগাযোগ প্রদান করছি।`
             },
             ta: {
-                greeting: `வணக்கம்! நான் உங்கள் AI சுகாதார உதவியாளர். இன்று நான் உங்களுக்கு எப்படி உதவ முடியும்?`,
-                symptoms: `உங்கள் அறிகுறிகளை சரிபார்க்க நான் உதவ முடியும். நீங்கள் என்ன அனுபவிக்கிறீர்கள் என்று விவரிக்கவும்.`,
-                vaccine: `நான் தடுப்பூசி தகவலை வழங்க முடியும். நீங்கள் என்ன தெரிந்து கொள்ள விரும்புகிறீர்கள்?`,
-                prevention: `ஆரோக்கியமாக இருக்க இங்கே சில தடுப்பு சுகாதார குறிப்புகள் உள்ளன.`,
-                emergency: `இது ஒரு அவசரநிலை போல் தெரிகிறது. உடனடியாக உங்கள் உள்ளூர் அவசர சேவைகளை அழைக்கவும்.`
+                greeting: `வணக்கம்! 👋 நான் உங்கள் AI சுகாதார உதவியாளர். நான் அறிகுறிகள், தடுப்பூசி அட்டவணைகள், தடுப்பு பராமரிப்பு மற்றும் அவசர வழிகாட்டுதலில் உங்களுக்கு உதவ முடியும். இன்று நான் உங்களுக்கு எப்படி உதவ முடியும்?`,
+                symptoms: `உங்கள் அறிகுறிகளை சரிபார்க்க நான் உதவ முடியும். நீங்கள் என்ன அனுபவிக்கிறீர்கள் என்று விவரிக்கவும், மருத்துவ அறிவின் அடிப்படையில் நான் வழிகாட்டுதலை வழங்குவேன்.`,
+                vaccine: `எல்லா வயதினருக்கும் தடுப்பூசி தகவலை என்னால் வழங்க முடியும். உங்களுக்கு என்ன குறிப்பிட்ட தடுப்பூசி தகவல் தேவை?`,
+                prevention: `உங்களை ஆரோக்கியமாக வைத்திருக்க முக்கியமான தடுப்பு சுகாதார குறிப்புகளை நான் பகிர்ந்து கொள்வேன். நீங்கள் எந்த பகுதியில் கவனம் செலுத்த விரும்புகிறீர்கள்?`,
+                emergency: `இது ஒரு அவசரநிலை போல் தெரிகிறது. நான் உடனடி வழிகாட்டுதல் மற்றும் அவசர தொடர்புகளை வழங்குகிறேன்.`
             },
             te: {
-                greeting: `హలో! నేను మీ AI ఆరోగ్య సహాయకుడను. ఈరోజు నేను మీకు ఎలా సహాయం చేయగలను?`,
-                symptoms: `మీ లక్షణాలను తనిఖీ చేయడంలో నేను సహాయం చేయగలను. మీరు ఏమి అనుభవిస్తున్నారో దయచేసి వివరించండి.`,
-                vaccine: `నేను వ్యాక్సినేషన్ సమాచారాన్ని అందించగలను. మీరు ఏమి తెలుసుకోవాలనుకుంటున్నారు?`,
-                prevention: `ఆరోగ్యంగా ఉండటానికి ఇక్కడ కొన్ని నివారణ ఆరోగ్య చిట్కాలు ఉన్నాయి.`,
-                emergency: `ఇది అత్యవసర పరిస్థితి అనిపిస్తుంది. దయచేసి వెంటనే మీ స్థానిక అత్యవసర సేవలకు కాల్ చేయండి.`
+                greeting: `హలో! 👋 నేను మీ AI ఆరోగ్య సహాయకుడను. నేను లక్షణాలు, టీకా షెడ్యూల్‌లు, నివారణ సంరక్షణ మరియు అత్యవసర మార్గదర్శకత్వంలో మీకు సహాయం చేయగలను. ఈరోజు నేను మీకు ఎలా సహాయం చేయగలను?`,
+                symptoms: `మీ లక్షణాలను తనిఖీ చేయడంలో నేను సహాయం చేయగలను. మీరు ఏమి అనుభవిస్తున్నారో దయచేసి వివరించండి, మరియు వైద్య జ్ఞానం ఆధారంగా నేను మార్గదర్శకత్వం అందిస్తాను.`,
+                vaccine: `అన్ని వయస్సుల వారికి టీకా సమాచారాన్ని నేను అందించగలను. మీకు ఏ నిర్దిష్ట టీకా సమాచారం అవసరం?`,
+                prevention: `మిమ్మల్ని ఆరోగ్యంగా ఉంచడానికి ముఖ్యమైన నివారణ ఆరోగ్య చిట్కాలను నేను పంచుకుంటాను. మీరు ఏ విషయంపై దృష్టి పెట్టాలని అనుకుంటున్నారు?`,
+                emergency: `ఇది అత్యవసర పరిస్థితిగా కనిపిస్తోంది. నేను తక్షణ మార్గదర్శకత్వం మరియు అత్యవసర పరిచయాలను అందిస్తున్నాను.`
             }
         };
 
-        // Sample responses for different query types
-        const sampleResponses = {
+        // Comprehensive health responses database
+        const healthResponses = {
             symptoms: {
-                fever: `Based on your symptoms of fever and cough, this could indicate a respiratory infection. I recommend:\n\n1. Monitor your temperature regularly\n2. Stay hydrated and rest\n3. If fever persists above 101°F for more than 3 days, consult a healthcare provider\n4. Wear a mask around others\n\nAccuracy: 85% | Confidence: High`,
-                headache: `Headaches can have various causes. Here's what I suggest:\n\n1. Ensure adequate hydration\n2. Check if you've been getting enough sleep\n3. Consider stress levels and screen time\n4. If severe or persistent, consult a doctor\n\nAccuracy: 78% | Confidence: Medium`,
-                stomach: `For stomach pain and digestive issues:\n\n1. Avoid spicy or heavy foods\n2. Stay hydrated with clear fluids\n3. Consider probiotics\n4. If pain is severe or persists, seek medical attention\n\nAccuracy: 82% | Confidence: High`
+                fever: {
+                    keywords: [`fever`, `temperature`, `hot`, `chills`, `burning`],
+                    response: `🌡️ **Fever Assessment**
+
+Based on your fever symptoms, here's what I recommend:
+
+**Immediate Care:**
+• Monitor temperature every 2-4 hours
+• Stay hydrated - drink plenty of fluids
+• Rest in a cool, comfortable environment
+• Use cool compresses on forehead/wrists
+
+**When to Seek Medical Care:**
+🚨 **Urgent** - Temperature above 103°F (39.4°C)
+🚨 **Urgent** - Fever with severe headache, neck stiffness, or confusion
+⚠️ **Soon** - Fever lasting more than 3 days
+⚠️ **Soon** - Difficulty breathing or chest pain
+
+**Home Remedies:**
+• Acetaminophen or ibuprofen as directed
+• Light, breathable clothing
+• Lukewarm baths (not cold)
+
+**Confidence Level:** 88% | **Severity:** Monitor closely
+
+Would you like specific guidance based on your age or additional symptoms?`
+                },
+                cough: {
+                    keywords: [`cough`, `coughing`, `phlegm`, `mucus`, `throat`],
+                    response: `🫁 **Cough Analysis**
+
+I can help assess your cough symptoms:
+
+**Cough Type Assessment:**
+• **Dry cough** - Often viral, allergies, or irritation
+• **Productive cough** - May indicate bacterial infection
+• **Persistent cough** - Could be chronic condition
+
+**Immediate Relief:**
+• Honey (1-2 tsp) - natural cough suppressant
+• Warm salt water gargle (1/2 tsp salt in warm water)
+• Stay hydrated - warm liquids preferred
+• Humidify your environment
+
+**Red Flags - Seek Medical Care:**
+🚨 **Urgent** - Coughing up blood
+🚨 **Urgent** - Severe difficulty breathing
+⚠️ **Soon** - Cough with high fever (>101°F)
+⚠️ **Soon** - Persistent cough >2 weeks
+
+**Natural Remedies:**
+• Ginger tea with honey
+• Steam inhalation (10-15 minutes)
+• Elevate head while sleeping
+
+**Confidence Level:** 85% | **Duration:** Usually 7-14 days
+
+Do you have any additional symptoms like fever, chest pain, or difficulty breathing?`
+                },
+                headache: {
+                    keywords: [`headache`, `head pain`, `migraine`, `head hurt`],
+                    response: `🧠 **Headache Assessment**
+
+Let me help you understand your headache:
+
+**Common Types:**
+• **Tension headache** - Band-like pressure, stress-related
+• **Migraine** - Throbbing, often one-sided, light sensitivity
+• **Sinus headache** - Pressure around eyes/forehead
+• **Cluster headache** - Severe, around one eye
+
+**Immediate Relief:**
+• Apply cold compress to forehead (15-20 min)
+• Rest in dark, quiet room
+• Gentle neck/shoulder massage
+• Stay hydrated
+
+**Prevention Tips:**
+• Regular sleep schedule (7-9 hours)
+• Manage stress levels
+• Avoid trigger foods (chocolate, aged cheese, MSG)
+• Regular meals - don't skip
+
+**Seek Medical Care If:**
+🚨 **Emergency** - Sudden, severe "thunderclap" headache
+🚨 **Emergency** - Headache with fever, neck stiffness, confusion
+⚠️ **Soon** - Headaches becoming more frequent/severe
+⚠️ **Soon** - Headache after head injury
+
+**Confidence Level:** 82% | **Relief Time:** 30 minutes - 4 hours
+
+Are there any specific triggers you've noticed, or is this a new type of headache for you?`
+                },
+                stomach: {
+                    keywords: [`stomach`, `abdominal`, `belly`, `nausea`, `vomiting`, `diarrhea`],
+                    response: `🤢 **Digestive Issue Assessment**
+
+I'll help you with your stomach concerns:
+
+**Common Causes:**
+• Food poisoning or contamination
+• Viral gastroenteritis ("stomach flu")
+• Stress or anxiety
+• Dietary indiscretion
+
+**Immediate Care:**
+• **BRAT diet** - Bananas, Rice, Applesauce, Toast
+• Clear fluids - water, clear broths, electrolyte solutions
+• Avoid dairy, fatty, or spicy foods
+• Small, frequent meals
+
+**Hydration is Key:**
+• Sip fluids slowly if vomiting
+• Oral rehydration salts if available
+• Coconut water (natural electrolytes)
+
+**Red Flags - Seek Medical Care:**
+🚨 **Emergency** - Severe dehydration (dizziness, no urination)
+🚨 **Emergency** - Blood in vomit or stool
+🚨 **Emergency** - Severe abdominal pain
+⚠️ **Soon** - Persistent vomiting >24 hours
+⚠️ **Soon** - High fever with stomach symptoms
+
+**Recovery Timeline:**
+• Mild cases: 1-3 days
+• Viral gastroenteritis: 3-7 days
+
+**Confidence Level:** 87% | **Severity:** Usually self-limiting
+
+Can you tell me more about when symptoms started and any recent food or travel history?`
+                }
             },
-            vaccine: {
-                child: `For children's vaccination schedule:\n\n• Birth: BCG, Hepatitis B\n• 6 weeks: DPT, Polio, Hepatitis B\n• 10 weeks: DPT, Polio\n• 14 weeks: DPT, Polio\n• 9 months: Measles\n• 15 months: MMR, Varicella\n\nNext due vaccines will be sent as reminders!`,
-                adult: `Adult vaccination recommendations:\n\n• Annual flu vaccine\n• COVID-19 boosters as recommended\n• Tetanus booster every 10 years\n• Hepatitis B if not previously vaccinated\n\nConsult your healthcare provider for personalized advice.`,
-                travel: `Travel vaccinations may include:\n\n• Hepatitis A and B\n• Japanese Encephalitis\n• Typhoid\n• Yellow Fever (if required)\n\nVisit a travel clinic 4-6 weeks before departure.`
+            vaccination: {
+                child: {
+                    keywords: [`child`, `baby`, `infant`, `kid`, `pediatric`],
+                    response: `👶 **Pediatric Vaccination Schedule**
+
+Here's the recommended vaccination timeline for children:
+
+**Birth - 2 months:**
+• **Birth:** Hepatitis B (1st dose), BCG
+• **6 weeks:** DPT (1st), Polio (1st), Hib (1st), Hepatitis B (2nd)
+• **10 weeks:** DPT (2nd), Polio (2nd), Hib (2nd)
+
+**14 weeks - 15 months:**
+• **14 weeks:** DPT (3rd), Polio (3rd), Hib (3rd)
+• **9 months:** Measles (1st dose)
+• **15 months:** MMR, Varicella (Chickenpox)
+
+**18 months - 5 years:**
+• **18 months:** DPT booster, Polio booster
+• **2 years:** Typhoid (if recommended)
+• **5 years:** DPT booster, MMR booster
+
+**Important Reminders:**
+📅 **Track due dates** - Set calendar reminders
+🏥 **Maintain records** - Keep vaccination card safe
+⚠️ **Side effects** - Mild fever/soreness is normal
+🚨 **Delayed vaccines** - Catch up as soon as possible
+
+**Optional but Recommended:**
+• Pneumococcal vaccine
+• Rotavirus vaccine
+• Hepatitis A
+
+**Next Steps:**
+Would you like me to calculate specific due dates based on your child's birth date, or do you have questions about side effects?`
+                },
+                adult: {
+                    keywords: [`adult`, `grown up`, `elderly`, `senior`],
+                    response: `👨‍⚕️ **Adult Vaccination Guidelines**
+
+Essential vaccines for adults:
+
+**Routine Adult Vaccines:**
+• **Tetanus-Diphtheria (Td)** - Every 10 years
+• **Influenza** - Annually (especially Oct-Dec)
+• **COVID-19** - As recommended by health authorities
+
+**Age-Specific Recommendations:**
+
+**19-49 years:**
+• HPV (if not previously vaccinated)
+• Hepatitis B (if risk factors)
+• Meningococcal (college students, military)
+
+**50+ years:**
+• **Shingles (Zoster)** - One-time at age 50+
+• **Pneumonia** - At age 65 or if chronic conditions
+
+**65+ years:**
+• **Pneumococcal** - Two different types
+• **High-dose flu vaccine** - Better protection
+
+**Special Situations:**
+🧳 **Travel vaccines** - Hepatitis A/B, Typhoid, Yellow Fever
+🤰 **Pregnancy** - Tdap during each pregnancy
+🏥 **Healthcare workers** - Hepatitis B, MMR, Varicella
+💊 **Chronic conditions** - Additional vaccines may be needed
+
+**Vaccine Safety:**
+• Side effects usually mild (soreness, low fever)
+• Serious reactions are very rare
+• Benefits far outweigh risks
+
+Which specific vaccines are you interested in, or do you have particular health conditions I should consider?`
+                },
+                travel: {
+                    keywords: [`travel`, `trip`, `vacation`, `abroad`, `international`],
+                    response: `✈️ **Travel Vaccination Guide**
+
+Plan your travel vaccines 4-6 weeks before departure:
+
+**Universal Travel Vaccines:**
+• **Hepatitis A** - Food/water contamination risk
+• **Typhoid** - Poor sanitation areas
+• **Routine vaccines** - Ensure up to date (MMR, Tdap, flu)
+
+**Destination-Specific Vaccines:**
+
+**Southeast Asia:**
+• Japanese Encephalitis (rural areas)
+• Hepatitis B (if extended stay)
+• Rabies (if animal exposure risk)
+
+**Africa:**
+• **Yellow Fever** - Required for many countries
+• Meningococcal (sub-Saharan Africa)
+• Malaria prevention (medication, not vaccine)
+
+**South America:**
+• Yellow Fever (Amazon basin)
+• Hepatitis A & B
+• Typhoid
+
+**Europe/North America:**
+• Usually just routine vaccines
+• Tick-borne encephalitis (certain regions)
+
+**Pre-Travel Checklist:**
+📋 **4-6 weeks before:** Consult travel medicine clinic
+💉 **Vaccination records:** Carry international certificate
+💊 **Medications:** Anti-malarial if needed
+🩹 **Travel kit:** Basic medical supplies
+
+**Entry Requirements:**
+Some countries require proof of Yellow Fever vaccination for entry.
+
+**Cost Considerations:**
+Travel vaccines can be expensive but prevent serious illness.
+
+Where are you planning to travel, and what type of activities will you be doing?`
+                }
             },
-            prevention: [
-                `🧼 Wash hands frequently with soap and water for at least 20 seconds`,
-                `😷 Wear masks in crowded places and maintain social distancing`,
-                `💧 Stay hydrated - drink at least 8 glasses of water daily`,
-                `🥗 Eat a balanced diet rich in fruits and vegetables`,
-                `🏃‍♂️ Exercise regularly - at least 30 minutes of physical activity daily`,
-                `😴 Get adequate sleep - 7-9 hours for adults`,
-                `🚭 Avoid smoking and limit alcohol consumption`,
-                `☀️ Protect yourself from excessive sun exposure`
-            ],
-            emergency: `🚨 EMERGENCY PROTOCOL ACTIVATED 🚨\n\nFor immediate medical attention:\n📞 Emergency: 102 (India)\n🏥 Ambulance: 108\n☎️ Local Emergency: Contact your nearest hospital\n\nSymptoms requiring immediate attention:\n• Chest pain or difficulty breathing\n• Severe bleeding\n• Loss of consciousness\n• Severe allergic reactions\n\nDo not delay - seek immediate medical help!`
+            prevention: {
+                general: [
+                    `🧼 **Hand Hygiene Excellence**
+Wash hands with soap for 20+ seconds, especially:
+• Before eating or preparing food
+• After using restroom
+• After coughing/sneezing
+• When returning home
+• Use alcohol-based sanitizer (60%+ alcohol) when soap unavailable`,
+
+                    `😷 **Respiratory Protection**
+• Wear masks in crowded indoor spaces
+• Maintain 6 feet distance when possible
+• Cover coughs/sneezes with elbow, not hands
+• Avoid touching face, especially eyes, nose, mouth
+• Ensure good ventilation in indoor spaces`,
+
+                    `💧 **Optimal Hydration Strategy**
+• Drink 8-10 glasses of water daily
+• More if active, hot climate, or illness
+• Monitor urine color (pale yellow = good)
+• Include electrolytes during heavy sweating
+• Limit alcohol and excessive caffeine`,
+
+                    `🥗 **Nutritional Immunity Boosting**
+• 5+ servings fruits/vegetables daily
+• Include vitamin C (citrus, berries, leafy greens)
+• Zinc sources (nuts, seeds, legumes)
+• Vitamin D (sunlight, fatty fish, fortified foods)
+• Limit processed foods, excess sugar`,
+
+                    `🏃‍♂️ **Physical Activity Guidelines**
+• 150+ minutes moderate exercise weekly
+• Include strength training 2+ days/week
+• Take stairs instead of elevators
+• Park farther away for extra walking
+• Exercise boosts immune system significantly`,
+
+                    `😴 **Sleep Quality Optimization**
+• 7-9 hours nightly for adults
+• Consistent sleep/wake times
+• Cool, dark, quiet bedroom
+• No screens 1 hour before bed
+• Avoid large meals, caffeine before bedtime`,
+
+                    `🧘‍♀️ **Stress Management Techniques**
+• Practice deep breathing exercises
+• Regular meditation (even 5-10 minutes daily)
+• Physical activity reduces stress hormones
+• Maintain social connections
+• Seek professional help if needed`,
+
+                    `☀️ **Sun Protection Essentials**
+• SPF 30+ sunscreen, reapply every 2 hours
+• Seek shade during peak hours (10 AM - 4 PM)
+• Wear protective clothing, wide-brimmed hats
+• Sunglasses with UV protection
+• Be extra careful near water, sand, snow`
+                ],
+                seasonal: {
+                    monsoon: `🌧️ **Monsoon Health Protection**
+
+**Water-borne Disease Prevention:**
+• Drink only boiled/bottled water
+• Avoid ice cubes from unknown sources
+• Wash fruits/vegetables thoroughly
+• Avoid street food during heavy rains
+
+**Vector-borne Disease Prevention:**
+• Eliminate standing water (dengue, malaria prevention)
+• Use mosquito nets and repellents
+• Wear long sleeves during dawn/dusk
+• Keep surroundings clean and dry
+
+**Skin and Foot Care:**
+• Keep feet dry, change wet socks immediately
+• Use antifungal powder in shoes
+• Avoid walking in flood water
+• Treat cuts/wounds immediately
+
+**Respiratory Health:**
+• Dry clothes completely before wearing
+• Ensure good ventilation at home
+• Use air purifiers if possible
+• Watch for mold growth`,
+
+                    summer: `☀️ **Summer Health Guidelines**
+
+**Heat-Related Illness Prevention:**
+• Stay hydrated - drink before feeling thirsty
+• Avoid peak sun hours (10 AM - 4 PM)
+• Wear light-colored, loose-fitting clothes
+• Take frequent breaks in shade/AC
+
+**Food Safety:**
+• Refrigerate perishables quickly
+• Avoid foods left out >2 hours (1 hour if >90°F)
+• Be cautious with dairy products
+• Wash hands frequently when handling food
+
+**Skin Protection:**
+• Apply sunscreen 30 minutes before going out
+• Reapply every 2 hours, more if swimming/sweating
+• Wear wide-brimmed hats and sunglasses
+• Stay in shade when possible`,
+
+                    winter: `❄️ **Winter Wellness Strategy**
+
+**Immune System Support:**
+• Get adequate Vitamin D (supplements if needed)
+• Maintain exercise routine indoors
+• Eat warming, nutritious foods
+• Consider flu vaccination
+
+**Respiratory Health:**
+• Use humidifiers to combat dry air
+• Stay warm but don't overheat indoors
+• Avoid sudden temperature changes
+• Practice good cough/sneeze etiquette
+
+**Mental Health:**
+• Combat seasonal depression with light therapy
+• Maintain social connections
+• Continue outdoor activities when possible
+• Seek professional help if needed`
+                }
+            },
+            emergency: `🚨 **EMERGENCY HEALTH PROTOCOLS** 🚨
+
+**IMMEDIATE ACTION REQUIRED**
+
+**Emergency Numbers (India):**
+📞 **National Emergency:** 112
+🚑 **Ambulance:** 108
+🏥 **Medical Emergency:** 102
+👮‍♂️ **Police:** 100
+🔥 **Fire:** 101
+
+**CRITICAL SYMPTOMS - CALL 108 NOW:**
+🫀 **Heart Attack Signs:**
+• Chest pain/pressure (>5 minutes)
+• Pain radiating to arm, jaw, back
+• Shortness of breath, nausea, sweating
+
+🧠 **Stroke Signs (FAST):**
+• **F**ace drooping
+• **A**rm weakness  
+• **S**peech difficulty
+• **T**ime to call emergency
+
+🫁 **Breathing Emergency:**
+• Severe difficulty breathing
+• Choking (cannot speak/cough)
+• Blue lips or fingernails
+
+🩸 **Severe Bleeding:**
+• Apply direct pressure with clean cloth
+• Elevate wound above heart level
+• Don't remove embedded objects
+
+**POISON EMERGENCY:**
+☎️ **Poison Control:** 1066
+• Don't induce vomiting unless instructed
+• Bring poison container to hospital
+• Note time of ingestion
+
+**WHILE WAITING FOR HELP:**
+1. Stay calm and keep patient calm
+2. Monitor breathing and consciousness
+3. Don't give food/water unless instructed
+4. Gather medical history/medications
+5. Clear pathway for emergency responders
+
+**LOCATION SERVICES:**
+📍 Enable location sharing with emergency services
+🏥 Know nearest hospital route
+👨‍⚕️ Keep emergency contacts readily available
+
+**This is a medical emergency. Professional help is required immediately.**`
         };
 
-        // Navigation functions
-        function showSection(sectionId) {
-            // Hide all sections
-            const sections = document.querySelectorAll(`.section`);
-            sections.forEach(section => section.classList.remove(`active`));
-            
-            // Show selected section
-            document.getElementById(sectionId).classList.add(`active`);
-            
-            // Update navigation tabs
-            const tabs = document.querySelectorAll(`.nav-tab`);
-            tabs.forEach(tab => tab.classList.remove(`active`));
-            event.target.classList.add(`active`);
-
-            // Initialize charts if dashboard is selected
-            if (sectionId === `dashboard`) {
-                setTimeout(initializeCharts, 100);
+        // AI-powered health response generation
+        async function generateHealthResponse(message) {
+            try {
+                // Call AI backend
+                const response = await fetch('http://localhost:8001/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        language: currentLanguage,
+                        user_id: 'demo_user'
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.response;
+                } else {
+                    throw new Error('AI service unavailable');
+                }
+            } catch (error) {
+                console.log('AI service error, using fallback:', error);
+                return getFallbackResponse(message);
             }
+        }
+        
+        // Fallback response when AI is unavailable
+        function getFallbackResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            // Emergency detection with high priority
+            const emergencyKeywords = [`emergency`, `urgent`, `chest pain`, `can't breathe`, `difficulty breathing`, `blood`, `unconscious`, `severe pain`, `heart attack`, `stroke`, `choking`];
+            if (emergencyKeywords.some(keyword => lowerMessage.includes(keyword))) {
+                return healthResponses.emergency;
+            }
+            
+            // Symptom checking with detailed responses
+            for (const [symptom, data] of Object.entries(healthResponses.symptoms)) {
+                if (data.keywords.some(keyword => lowerMessage.includes(keyword))) {
+                    return data.response;
+                }
+            }
+            
+            // Default response
+            return `🤖 **HealthBot Assistant (Offline Mode)**
+
+I'm currently running in offline mode, but I can still help with basic health guidance.
+
+**Your Question:** "${message}"
+
+**General Advice:**
+• For symptoms: Monitor and note duration/severity
+• For emergencies: Call 108 immediately
+• For prevention: Maintain hygiene and healthy lifestyle
+• For medications: Consult healthcare professionals
+
+**⚠️ Medical Disclaimer:** This is general information only. Always consult qualified healthcare professionals.
+
+**Confidence Level:** 70% | **Status:** Offline Mode
+
+Would you like me to provide more specific guidance?`;
         }
 
         // Architecture component highlighting
         function highlightComponent(element) {
-            // Remove previous highlights
             const components = document.querySelectorAll(`.arch-component`);
             components.forEach(comp => comp.style.borderColor = `transparent`);
             
-            // Highlight selected component
             element.style.borderColor = `var(--accent-green)`;
             element.style.transform = `translateY(-5px) scale(1.02)`;
             
-            // Reset after 3 seconds
             setTimeout(() => {
                 element.style.transform = ``;
                 element.style.borderColor = `transparent`;
             }, 3000);
         }
 
-        // Language switching
+        // Language switching with enhanced translations
         function switchLanguage(lang) {
             currentLanguage = lang;
             
-            // Update language buttons
             const langBtns = document.querySelectorAll(`.lang-btn`);
             langBtns.forEach(btn => btn.classList.remove(`active`));
             event.target.classList.add(`active`);
             
-            // Update chat greeting
             const chatMessages = document.getElementById(`chatMessages`);
             chatMessages.innerHTML = `
                 <div class="message bot">
-                    <strong>HealthBot:</strong> ${translations[lang].greeting}
+                    ${translations[lang].greeting}
+                    <span class="message-time">${getCurrentTime()}</span>
+                    <div class="message-feedback">
+                        <button class="feedback-btn" onclick="provideFeedback(this, 'positive')">
+                            <i class="fas fa-thumbs-up"></i>
+                        </button>
+                        <button class="feedback-btn" onclick="provideFeedback(this, 'negative')">
+                            <i class="fas fa-thumbs-down"></i>
+                        </button>
+                    </div>
                 </div>
             `;
             
-            // Reset chat history
             chatHistory = [];
+            messageCount = 0;
         }
 
-        // Chatbot functionality
+        // Enhanced chatbot functionality
         function sendMessage() {
             const input = document.getElementById(`chatInput`);
             const message = input.value.trim();
             
-            if (!message) return;
+            if (!message || isTyping) return;
             
             addMessage(message, `user`);
             input.value = ``;
             
-            // Show typing indicator
             showTypingIndicator();
             
-            // Generate response after delay
-            setTimeout(() => {
+            // Simulate realistic response time based on message complexity
+            const responseTime = Math.min(3000, message.length * 50 + 1000);
+            
+            // Use async AI response
+            generateHealthResponse(message).then(response => {
                 hideTypingIndicator();
-                const response = generateResponse(message);
                 addMessage(response, `bot`);
-            }, 1500);
+                
+                if (soundEnabled) {
+                    playNotificationSound();
+                }
+            }).catch(error => {
+                hideTypingIndicator();
+                const fallbackResponse = getFallbackResponse(message);
+                addMessage(fallbackResponse, `bot`);
+            });
         }
 
         function handleEnter(event) {
-            if (event.key === `Enter`) {
+            if (event.key === `Enter` && !event.shiftKey) {
+                event.preventDefault();
                 sendMessage();
             }
         }
 
+        // Enhanced quick actions with more realistic responses
         function quickAction(action) {
             const actions = {
-                symptoms: `I have fever and cough, what should I do?`,
-                vaccine: `When should my child get the next vaccination?`,
-                prevention: `Give me tips to prevent dengue fever`,
-                emergency: `I'm having chest pain, please help`
+                symptoms: `I have been experiencing fever, headache, and body aches for the past 2 days. What should I do?`,
+                vaccine: `My 6-month-old baby is due for vaccinations. What vaccines should they receive at this age?`,
+                prevention: `Can you give me tips to prevent seasonal illnesses during monsoon season?`,
+                emergency: `I'm experiencing severe chest pain and shortness of breath. Please help!`
             };
             
             const message = actions[action];
             addMessage(message, `user`);
             
             showTypingIndicator();
-            setTimeout(() => {
+            generateHealthResponse(message).then(response => {
                 hideTypingIndicator();
-                const response = generateResponse(message);
                 addMessage(response, `bot`);
-            }, 1500);
+                
+                if (soundEnabled) {
+                    playNotificationSound();
+                }
+            }).catch(error => {
+                hideTypingIndicator();
+                const fallbackResponse = getFallbackResponse(message);
+                addMessage(fallbackResponse, `bot`);
+            });
         }
 
+        // Enhanced message display with better formatting
         function addMessage(message, sender) {
             const chatMessages = document.getElementById(`chatMessages`);
             const messageDiv = document.createElement(`div`);
             messageDiv.className = `message ${sender}`;
             
+            messageCount++;
+            
             if (sender === `bot`) {
-                messageDiv.innerHTML = `<strong>HealthBot:</strong> ${message}`;
+                messageDiv.innerHTML = `
+                    ${formatMessage(message)}
+                    <span class="message-time">${getCurrentTime()}</span>
+                    <div class="message-feedback">
+                        <button class="feedback-btn" onclick="provideFeedback(this, 'positive')">
+                            <i class="fas fa-thumbs-up"></i>
+                        </button>
+                        <button class="feedback-btn" onclick="provideFeedback(this, 'negative')">
+                            <i class="fas fa-thumbs-down"></i>
+                        </button>
+                    </div>
+                `;
             } else {
-                messageDiv.innerHTML = `<strong>You:</strong> ${message}`;
+                messageDiv.innerHTML = `
+                    ${message}
+                    <span class="message-time">${getCurrentTime()}</span>
+                `;
             }
             
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
             
-            // Store in history
-            chatHistory.push({ message, sender, timestamp: new Date() });
+            chatHistory.push({ 
+                message, 
+                sender, 
+                timestamp: new Date(),
+                messageId: messageCount
+            });
         }
 
+        // Message formatting for better readability
+        function formatMessage(message) {
+            return message
+                .replace(/\*\*(.*?)\*\*/g, `<strong>$1</strong>`)
+                .replace(/\*(.*?)\*/g, `<em>$1</em>`)
+                .replace(/\n/g, `<br>`)
+                .replace(/•/g, `<span style="color: var(--accent-green);">•</span>`);
+        }
+
+        // Enhanced typing indicator
         function showTypingIndicator() {
+            if (isTyping) return;
+            
+            isTyping = true;
             const chatMessages = document.getElementById(`chatMessages`);
             const typingDiv = document.createElement(`div`);
-            typingDiv.className = `message bot`;
+            typingDiv.className = `typing-indicator`;
             typingDiv.id = `typing-indicator`;
-            typingDiv.innerHTML = `<strong>HealthBot:</strong> <div class="loading"></div> Analyzing your query...`;
+            typingDiv.innerHTML = `
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+                <span>HealthBot is analyzing your query...</span>
+            `;
             chatMessages.appendChild(typingDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
@@ -203,46 +727,93 @@
             if (typingIndicator) {
                 typingIndicator.remove();
             }
+            isTyping = false;
         }
 
-        function generateResponse(message) {
-            const lowerMessage = message.toLowerCase();
+        // Utility functions
+        function getCurrentTime() {
+            return new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        function provideFeedback(button, type) {
+            const allFeedbackBtns = button.parentElement.querySelectorAll(`.feedback-btn`);
+            allFeedbackBtns.forEach(btn => btn.classList.remove(`active`));
+            button.classList.add(`active`);
             
-            // Symptom checking
-            if (lowerMessage.includes(`fever`) || lowerMessage.includes(`cough`)) {
-                return sampleResponses.symptoms.fever;
-            }
-            if (lowerMessage.includes(`headache`) || lowerMessage.includes(`head`)) {
-                return sampleResponses.symptoms.headache;
-            }
-            if (lowerMessage.includes(`stomach`) || lowerMessage.includes(`pain`)) {
-                return sampleResponses.symptoms.stomach;
-            }
+            // You could send this feedback to analytics
+            console.log(`Feedback: ${type} for message ${messageCount}`);
+        }
+
+        function playNotificationSound() {
+            // Create a subtle notification sound using Web Audio API
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
             
-            // Vaccination queries
-            if (lowerMessage.includes(`child`) && lowerMessage.includes(`vaccin`)) {
-                return sampleResponses.vaccine.child;
-            }
-            if (lowerMessage.includes(`adult`) && lowerMessage.includes(`vaccin`)) {
-                return sampleResponses.vaccine.adult;
-            }
-            if (lowerMessage.includes(`travel`) && lowerMessage.includes(`vaccin`)) {
-                return sampleResponses.vaccine.travel;
-            }
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
             
-            // Prevention tips
-            if (lowerMessage.includes(`prevent`) || lowerMessage.includes(`tips`)) {
-                const randomTips = sampleResponses.prevention.sort(() => 0.5 - Math.random()).slice(0, 4);
-                return `Here are some important preventive healthcare tips:\n\n${randomTips.join(`\n`)}`;
-            }
+            oscillator.frequency.value = 800;
+            oscillator.type = `sine`;
             
-            // Emergency situations
-            if (lowerMessage.includes(`emergency`) || lowerMessage.includes(`chest pain`) || lowerMessage.includes(`help`)) {
-                return sampleResponses.emergency;
-            }
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
             
-            // Default response
-            return `Thank you for your question. Based on my analysis, I recommend consulting with a healthcare professional for personalized advice. In the meantime, here are some general tips:\n\n• Stay hydrated\n• Get adequate rest\n• Monitor your symptoms\n• Seek immediate medical attention if symptoms worsen\n\nAccuracy: 75% | Confidence: Medium\n\nIs there anything specific you'd like to know more about?`;
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+
+        // Chat control functions
+        function scrollToChatbot() {
+            document.getElementById(`prototype`).scrollIntoView({ behavior: `smooth` });
+        }
+
+        function clearChat() {
+            const chatMessages = document.getElementById(`chatMessages`);
+            chatMessages.innerHTML = `
+                <div class="message bot">
+                    Chat cleared! 🧹 How can I help you with your health questions today?
+                    <span class="message-time">${getCurrentTime()}</span>
+                </div>
+            `;
+            chatHistory = [];
+            messageCount = 0;
+        }
+
+        function exportChat() {
+            const chatData = {
+                exportDate: new Date().toISOString(),
+                language: currentLanguage,
+                messageCount: chatHistory.length,
+                messages: chatHistory
+            };
+            
+            const blob = new Blob([JSON.stringify(chatData, null, 2)], {
+                type: `application/json`
+            });
+            
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement(`a`);
+            a.href = url;
+            a.download = `healthbot-chat-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const soundIcon = document.getElementById(`soundIcon`);
+            const soundText = document.getElementById(`soundText`);
+            
+            if (soundEnabled) {
+                soundIcon.className = `fas fa-volume-up`;
+                soundText.textContent = `Sound On`;
+            } else {
+                soundIcon.className = `fas fa-volume-mute`;
+                soundText.textContent = `Sound Off`;
+            }
         }
 
         // Chart initialization
@@ -368,19 +939,74 @@
             }
         }
 
+        // AI Assistant Widget Functions
+        function toggleAIChat() {
+            const widget = document.getElementById('aiChatWidget');
+            widget.classList.toggle('active');
+        }
+
+        function sendAIMessage() {
+            const input = document.getElementById('aiInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            addAIMessage(message, 'user');
+            input.value = '';
+            
+            generateHealthResponse(message).then(response => {
+                addAIMessage(response, 'bot');
+            }).catch(error => {
+                const fallbackResponse = getFallbackResponse(message);
+                addAIMessage(fallbackResponse, 'bot');
+            });
+        }
+
+        function handleAIEnter(event) {
+            if (event.key === 'Enter') {
+                sendAIMessage();
+            }
+        }
+
+        function addAIMessage(message, sender) {
+            const messagesContainer = document.getElementById('aiChatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'ai-message';
+            
+            if (sender === 'user') {
+                messageDiv.style.background = 'var(--primary-blue)';
+                messageDiv.style.color = 'white';
+                messageDiv.style.marginLeft = '20px';
+                messageDiv.style.textAlign = 'right';
+            }
+            
+            messageDiv.innerHTML = formatMessage(message);
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
         // Initialize the page
         document.addEventListener(`DOMContentLoaded`, function() {
-            // Add initial chat message
-            const initialMessage = translations[currentLanguage].greeting;
+            // Initialize charts
+            setTimeout(initializeCharts, 100);
             
             // Set up event listeners
             const chatInput = document.getElementById(`chatInput`);
             if (chatInput) {
                 chatInput.addEventListener(`keypress`, handleEnter);
+                
+                // Auto-resize input based on content
+                chatInput.addEventListener(`input`, function() {
+                    const sendBtn = document.getElementById(`sendBtn`);
+                    sendBtn.disabled = this.value.trim() === ``;
+                });
             }
             
-            // Initialize charts if dashboard is visible
-            if (document.getElementById(`dashboard`).classList.contains(`active`)) {
-                setTimeout(initializeCharts, 100);
-            }
+            // Add welcome animation
+            setTimeout(() => {
+                const firstMessage = document.querySelector(`.message.bot`);
+                if (firstMessage) {
+                    firstMessage.style.animation = `messageSlide 0.6s ease`;
+                }
+            }, 500);
         });
