@@ -1,7 +1,7 @@
 // API Configuration
 const API_CONFIG = {
-    BASE_URL: window.location.hostname === 'localhost' 
-        ? 'http://localhost:8001' 
+    BASE_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://127.0.0.1:8001' 
         : 'https://backend-9t14.onrender.com',
     ENDPOINTS: {
         CHAT: '/chat',
@@ -11,4 +11,5 @@ const API_CONFIG = {
     }
 };
 
+console.log('API Config loaded:', API_CONFIG);
 window.API_CONFIG = API_CONFIG;

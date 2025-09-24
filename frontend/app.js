@@ -485,6 +485,8 @@ Wash hands with soap for 20+ seconds, especially:
         // AI-powered health response generation
         async function generateHealthResponse(message) {
             try {
+                console.log('Attempting to connect to backend:', `${window.API_CONFIG.BASE_URL}${window.API_CONFIG.ENDPOINTS.CHAT}`);
+                
                 // Call AI backend
                 const response = await fetch(`${window.API_CONFIG.BASE_URL}${window.API_CONFIG.ENDPOINTS.CHAT}`, {
                     method: 'POST',
@@ -498,14 +500,18 @@ Wash hands with soap for 20+ seconds, especially:
                     })
                 });
                 
+                console.log('Backend response status:', response.status);
+                
                 if (response.ok) {
                     const data = await response.json();
+                    console.log('Backend response data:', data);
                     return data.response;
                 } else {
-                    throw new Error('AI service unavailable');
+                    console.error('Backend error:', response.status, response.statusText);
+                    throw new Error(`Backend error: ${response.status}`);
                 }
             } catch (error) {
-                console.log('AI service error, using fallback:', error);
+                console.error('Connection error:', error);
                 return getFallbackResponse(message);
             }
         }
@@ -653,11 +659,15 @@ Would you like me to provide more specific guidance?`;
             });
         }
 
-        // Enhanced message display with better formatting
+        // Enhanced message display with better formatting and animations
         function addMessage(message, sender) {
             const chatMessages = document.getElementById(`chatMessages`);
             const messageDiv = document.createElement(`div`);
             messageDiv.className = `message ${sender}`;
+            
+            // Add entrance animation
+            messageDiv.style.opacity = '0';
+            messageDiv.style.transform = 'translateY(20px) scale(0.9)';
             
             messageCount++;
             
@@ -682,6 +692,14 @@ Would you like me to provide more specific guidance?`;
             }
             
             chatMessages.appendChild(messageDiv);
+            
+            // Animate message entrance
+            setTimeout(() => {
+                messageDiv.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                messageDiv.style.opacity = '1';
+                messageDiv.style.transform = 'translateY(0) scale(1)';
+            }, 50);
+            
             chatMessages.scrollTop = chatMessages.scrollHeight;
             
             chatHistory.push({ 
@@ -985,10 +1003,87 @@ Would you like me to provide more specific guidance?`;
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
+        // Modern Animation Enhancements
+        function initScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                        entry.target.classList.add('animate-in');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all sections and cards
+            document.querySelectorAll('.section, .feature-card, .arch-component, .timeline-item').forEach(el => {
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
+            });
+        }
+
+        function addParallaxEffect() {
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const parallaxElements = document.querySelectorAll('.header::before');
+                
+                parallaxElements.forEach(el => {
+                    const speed = 0.5;
+                    el.style.transform = `translateY(${scrolled * speed}px)`;
+                });
+            });
+        }
+
+        function addHoverEffects() {
+            // Add magnetic effect to buttons
+            document.querySelectorAll('.prototype-button, .quick-action, .send-btn').forEach(button => {
+                button.addEventListener('mousemove', (e) => {
+                    const rect = button.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    
+                    button.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px) scale(1.05)`;
+                });
+                
+                button.addEventListener('mouseleave', () => {
+                    button.style.transform = '';
+                });
+            });
+        }
+
+        function addTypingEffect() {
+            const textElements = document.querySelectorAll('.header h1, .prototype-title');
+            
+            textElements.forEach(element => {
+                const text = element.textContent;
+                element.textContent = '';
+                
+                let i = 0;
+                const typeWriter = () => {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, 100);
+                    }
+                };
+                
+                setTimeout(typeWriter, 500);
+            });
+        }
+
         // Initialize the page
         document.addEventListener(`DOMContentLoaded`, function() {
             // Initialize charts
             setTimeout(initializeCharts, 100);
+            
+            // Initialize modern animations
+            initScrollAnimations();
+            addParallaxEffect();
+            addHoverEffects();
             
             // Set up event listeners
             const chatInput = document.getElementById(`chatInput`);

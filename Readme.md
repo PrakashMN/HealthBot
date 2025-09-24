@@ -53,21 +53,30 @@ Make sure you have the following installed on your local machine:
 
 ## 📂 Project Structure
 
-The project is organized into separate `frontend` and `backend` services.
+The project is organized into separate `frontend` and `backend` services with additional configuration files.
 
 ```
 HealthBot/
 ├── backend/
 │   ├── app/
+│   │   ├── ai_service.py
 │   │   └── main.py
+│   ├── .env
 │   ├── Dockerfile
 │   └── requirements.txt
 ├── frontend/
 │   ├── app.js
+│   ├── config.js
 │   ├── index.html
+│   ├── react-components.js
 │   └── style.css
 ├── .gitignore
-└── docker-compose.yml
+├── AI_SETUP.md
+├── docker-compose.yml
+├── package.json
+├── render.yaml
+├── test_api.py
+└── vercel.json
 ```
 
 ## 🤝 Contributing
