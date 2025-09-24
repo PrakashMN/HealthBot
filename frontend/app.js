@@ -486,7 +486,7 @@ Wash hands with soap for 20+ seconds, especially:
         async function generateHealthResponse(message) {
             try {
                 // Call AI backend
-                const response = await fetch('http://localhost:8001/chat', {
+                const response = await fetch(`${window.API_CONFIG.BASE_URL}${window.API_CONFIG.ENDPOINTS.CHAT}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
