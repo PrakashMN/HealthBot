@@ -1,0 +1,21 @@
+{
+  "name": "healthbot-frontend",
+  "version": "1.0.0",
+  "description": "AI-Driven Public Health Chatbot - React Frontend",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve -s .",
+    "build": "echo 'Build complete - using React via CDN'",
+    "dev": "live-server ."
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@babel/standalone": "^7.22.0"
+  },
+  "keywords": ["react", "healthcare", "chatbot", "ai", "multilingual"],
+  "author": "Prakash Nagaral",
+  "license": "MIT"
+}
