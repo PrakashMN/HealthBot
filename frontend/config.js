@@ -2,7 +2,7 @@
 const API_CONFIG = {
     BASE_URL: window.location.hostname === 'localhost' 
         ? 'http://localhost:8001' 
-        : 'https://healthbot-backend-ydzi.onrender.com',
+        : 'https://backend-9t14.onrender.com',
     ENDPOINTS: {
         CHAT: '/chat',
         HEALTH: '/health',
