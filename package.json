@@ -1,7 +1,7 @@
 {
-  "name": "healthbot-frontend",
+  "name": "drbuddy-frontend",
   "version": "1.0.0",
-  "description": "AI-Driven Public Health Chatbot - React Frontend",
+  "description": "DrBuddy - AI Health Assistant Frontend",
   "main": "index.html",
   "scripts": {
     "start": "serve -s .",

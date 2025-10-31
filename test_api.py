@@ -1,8 +1,11 @@
+import os
 import requests
-import json
 
-# Test Groq API
-api_key = "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"
+# Test Groq API using environment variable for security
+api_key = os.getenv("GROQ_API_KEY")
+if not api_key:
+    raise SystemExit("GROQ_API_KEY not set. Create a .env file or set the environment variable before running this test.")
+
 url = "https://api.groq.com/openai/v1/chat/completions"
 
 headers = {

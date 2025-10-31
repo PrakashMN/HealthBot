@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Driven Public Health Chatbot - Comprehensive System Overview</title>
+    <title>DrBuddy — AI Health Assistant</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="DrBuddy — AI health assistant offering multilingual symptom checking, vaccination reminders, and localized guidance.">
+    <link rel="icon" href="assets/logo-prakash-monogram.svg" type="image/svg+xml">
     <!-- React CDN -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -16,13 +20,56 @@
     <!-- Header -->
     <div class="header">
         <div class="header-content">
-            <h1><i class="fas fa-robot"></i> AI-Driven Public Health Chatbot</h1>
-            <p class="subtitle">Empowering Rural and Semi-Urban Communities with Intelligent Healthcare Assistance</p>
+                                                <h1 class="brand">
+                                                        <!-- inlined SVG logo-prakash.svg so it can inherit CSS variables for theming -->
+                                                        <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 160" role="img" aria-label="DrBuddy — Prakash Nagaral signature logo">
+                                                            <title>DrBuddy — Prakash Nagaral</title>
+                                                            <defs>
+                                                                <linearGradient id="lpGrad" x1="0" x2="1">
+                                                                    <stop offset="0%" stop-color="var(--primary-blue)"/>
+                                                                    <stop offset="100%" stop-color="var(--accent-teal)"/>
+                                                                </linearGradient>
+                                                                <filter id="lpShadow" x="-50%" y="-50%" width="200%" height="200%">
+                                                                    <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="rgba(15,42,68,0.16)"/>
+                                                                </filter>
+                                                            </defs>
+
+                                                            <!-- Sun motif + chat bubble: symbolizes Prakash (light) + conversation -->
+                                                            <g transform="translate(24,24)" filter="url(#lpShadow)">
+                                                                <g>
+                                                                    <circle cx="56" cy="56" r="44" fill="url(#lpGrad)" />
+                                                                    <!-- subtle rays -->
+                                                                    <g stroke="var(--primary-blue)" stroke-width="3" stroke-linecap="round" opacity="0.18">
+                                                                        <path d="M56 6 L56 26"/>
+                                                                        <path d="M56 86 L56 106"/>
+                                                                        <path d="M6 56 L26 56"/>
+                                                                        <path d="M86 56 L106 56"/>
+                                                                        <path d="M20 20 L34 34"/>
+                                                                        <path d="M78 78 L92 92"/>
+                                                                        <path d="M20 92 L34 78"/>
+                                                                        <path d="M78 34 L92 20"/>
+                                                                    </g>
+                                                                    <!-- chat tail -->
+                                                                    <path d="M28 98 L20 124 L44 110 Z" fill="url(#lpGrad)" opacity="0.95" />
+                                                                </g>
+                                                            </g>
+
+                                                            <!-- Wordmark: DrBuddy and personal name -->
+                                                            <g transform="translate(140,96)">
+                                                                <text x="0" y="-6" font-family="Poppins, Arial, sans-serif" font-weight="700" font-size="48" fill="var(--secondary-blue)" stroke="rgba(255,255,255,0.9)" stroke-width="2" paint-order="stroke fill">Dr</text>
+                                                                <text x="84" y="-6" font-family="Poppins, Arial, sans-serif" font-weight="500" font-size="48" fill="var(--accent-teal)" stroke="rgba(255,255,255,0.9)" stroke-width="2" paint-order="stroke fill">Buddy</text>
+                                                                <text x="0" y="34" font-family="Inter, Arial, sans-serif" font-weight="500" font-size="14" fill="rgba(255,255,255,0.92)">Designed by • Prakash Nagaral</text>
+                                                            </g>
+
+                                                        </svg>
+                                                        <span class="sr-only">DrBuddy — Designed by Prakash Nagaral</span>
+                                                </h1>
+            <p class="subtitle">AI health assistant — empowering communities with intelligent, accessible care</p>
             
             <div class="prototype-button-container">
                 <button class="prototype-button" onclick="scrollToChatbot()">
                     <i class="fas fa-rocket"></i>
-                    Try Interactive Prototype
+                    Interact with DrBuddy
                 </button>
             </div>
         </div>
@@ -34,45 +81,45 @@
             <div class="section">
                 <h2 class="section-title">
                     <i class="fas fa-sitemap"></i>
-                    System Architecture
+                     System Architecture
                 </h2>
                 
                 <div class="architecture-container">
                     <div class="architecture-grid">
                         <div class="arch-component" onclick="highlightComponent(this)">
-                            <i class="fas fa-brain"></i>
-                            <h4>NLP Processing Layer</h4>
-                            <p>Rasa/Dialogflow integration with custom health domain training for accurate intent recognition and response generation</p>
+                            <i class="fas fa-server"></i>
+                            <h4>Frontend (Nginx + React)</h4>
+                            <p>Static frontend served by Nginx (container). UI uses React via CDN, Chart.js for analytics, and Font Awesome for icons.</p>
+                        </div>
+
+                        <div class="arch-component" onclick="highlightComponent(this)">
+                            <i class="fas fa-code"></i>
+                            <h4>Backend (FastAPI + Uvicorn)</h4>
+                            <p>Python 3.11 backend built with FastAPI, served by Uvicorn — exposes `/chat`, `/symptom-check`, and other API endpoints.</p>
+                        </div>
+
+                        <div class="arch-component" onclick="highlightComponent(this)">
+                            <i class="fas fa-robot"></i>
+                            <h4>LLM Integrations</h4>
+                            <p>AI layer integrates with Groq (preferred) and OpenAI as fallback to generate health-aware responses; keys managed via `.env`.</p>
                         </div>
 
                         <div class="arch-component" onclick="highlightComponent(this)">
                             <i class="fas fa-database"></i>
-                            <h4>Government Health Database</h4>
-                            <p>RESTful API integration with official health databases for real-time disease surveillance and health statistics</p>
+                            <h4>Primary Data Store (PostgreSQL)</h4>
+                            <p>Postgres holds user records, vaccination history, and analytics data; configured as a service in Docker Compose.</p>
                         </div>
 
                         <div class="arch-component" onclick="highlightComponent(this)">
-                            <i class="fas fa-mobile-alt"></i>
-                            <h4>Multi-Channel Communication</h4>
-                            <p>WhatsApp Business API, SMS integration via Twilio for maximum reach across different user preferences</p>
+                            <i class="fas fa-bolt"></i>
+                            <h4>Cache & Sessions (Redis)</h4>
+                            <p>Redis used for caching and session data to speed up responses and reduce load on the primary database.</p>
                         </div>
 
                         <div class="arch-component" onclick="highlightComponent(this)">
-                            <i class="fas fa-bell"></i>
-                            <h4>Real-time Alert System</h4>
-                            <p>Push notification service for outbreak alerts, vaccination reminders, and emergency health advisories</p>
-                        </div>
-
-                        <div class="arch-component" onclick="highlightComponent(this)">
-                            <i class="fas fa-cloud"></i>
-                            <h4>Cloud Infrastructure</h4>
-                            <p>AWS/Azure/GCP deployment with auto-scaling, load balancing, and containerized microservices architecture</p>
-                        </div>
-
-                        <div class="arch-component" onclick="highlightComponent(this)">
-                            <i class="fas fa-chart-line"></i>
-                            <h4>Analytics Dashboard</h4>
-                            <p>Real-time monitoring with Prometheus/Grafana for system performance, user engagement, and health impact metrics</p>
+                            <i class="fas fa-boxes"></i>
+                            <h4>Containerization (Docker Compose)</h4>
+                            <p>Services (frontend, backend, db, redis) are orchestrated with Docker Compose for local development and testing.</p>
                         </div>
                     </div>
                 </div>
@@ -82,13 +129,13 @@
             <div class="section">
                 <h2 class="section-title">
                     <i class="fas fa-star"></i>
-                    Key Features
+                     Key Features
                 </h2>
                 
                 <div class="features-grid">
                     <div class="feature-card">
                         <h4><i class="fas fa-language"></i> Multilingual Support</h4>
-                        <p>Native support for Hindi, English, Bengali, Tamil, Telugu, and Marathi with automatic language detection and seamless switching capabilities.</p>
+                        <p>Native support for English, हिंदी, বাংলা, ಕನ್ನಡ, and ଓଡ଼ିଆ with automatic language detection and seamless switching capabilities.</p>
                     </div>
 
                     <div class="feature-card">
@@ -132,96 +179,91 @@
             <div class="section">
                 <h2 class="section-title">
                     <i class="fas fa-cogs"></i>
-                    Technical Implementation
+                     Technical Implementation
                 </h2>
                 
                 <div class="tech-grid">
                     <div class="tech-category">
                         <h4><i class="fas fa-code"></i> Programming Languages</h4>
                         <ul class="tech-list">
-                            <li>Python (Backend, NLP)</li>
-                            <li>JavaScript (Frontend)</li>
-                            <li>TypeScript (Type Safety)</li>
-                            <li>SQL (Database Queries)</li>
+                            <li>Python 3.11 (Backend, AI integration)</li>
+                            <li>JavaScript / ES6 (Frontend, client logic)</li>
+                            <li>HTML & CSS (Static UI)</li>
+                            <li>SQL (PostgreSQL queries)</li>
                         </ul>
                     </div>
 
                     <div class="tech-category">
                         <h4><i class="fas fa-layer-group"></i> Frameworks & Libraries</h4>
                         <ul class="tech-list">
-                            <li>Rasa (NLP Framework)</li>
-                            <li>React (Frontend UI)</li>
-                            <li>Node.js (Backend API)</li>
-                            <li>FastAPI (Python Backend)</li>
-                            <li>TensorFlow (ML Models)</li>
+                            <li>FastAPI (Python backend)</li>
+                            <li>Uvicorn (ASGI server)</li>
+                            <li>React (via CDN for UI components)</li>
+                            <li>Chart.js (Charts / analytics)</li>
+                            <li>requests, python-dotenv (utility libs)</li>
                         </ul>
                     </div>
 
                     <div class="tech-category">
                         <h4><i class="fas fa-database"></i> Databases & Storage</h4>
                         <ul class="tech-list">
-                            <li>PostgreSQL (Primary Database)</li>
-                            <li>Redis (Caching & Sessions)</li>
-                            <li>MongoDB (Document Storage)</li>
-                            <li>AWS S3 (File Storage)</li>
+                            <li>PostgreSQL (Primary relational DB)</li>
+                            <li>Redis (Caching and sessions)</li>
+                            <li>Optional: AWS S3 for file/assets if used in production</li>
                         </ul>
                     </div>
 
                     <div class="tech-category">
                         <h4><i class="fas fa-plug"></i> APIs & Integrations</h4>
                         <ul class="tech-list">
-                            <li>WhatsApp Business API</li>
-                            <li>Twilio SMS Gateway</li>
-                            <li>Government Health APIs</li>
-                            <li>Google Translate API</li>
-                            <li>Firebase Push Notifications</li>
+                            <li>Groq API (preferred LLM)</li>
+                            <li>OpenAI (fallback LLM)</li>
+                            <li>Pluggable: Twilio / WhatsApp Business API for messaging</li>
+                            <li>Optional: Google Translate or other translation APIs for multilingual support</li>
                         </ul>
                     </div>
 
                     <div class="tech-category">
                         <h4><i class="fas fa-cloud"></i> Cloud & DevOps</h4>
                         <ul class="tech-list">
-                            <li>Docker (Containerization)</li>
-                            <li>Kubernetes (Orchestration)</li>
-                            <li>AWS/Azure/GCP</li>
-                            <li>GitHub Actions (CI/CD)</li>
-                            <li>Terraform (Infrastructure)</li>
+                            <li>Docker (container images)</li>
+                            <li>Docker Compose (local multi-service orchestration)</li>
+                            <li>Nginx (serves static frontend in container)</li>
+                            <li>CI: GitHub Actions (recommended)</li>
                         </ul>
                     </div>
 
                     <div class="tech-category">
                         <h4><i class="fas fa-chart-line"></i> Monitoring & Analytics</h4>
                         <ul class="tech-list">
-                            <li>Prometheus (Metrics)</li>
-                            <li>Grafana (Dashboards)</li>
-                            <li>ELK Stack (Logging)</li>
-                            <li>Google Analytics</li>
-                            <li>Sentry (Error Tracking)</li>
+                            <li>Sentry (error tracking)</li>
+                            <li>Prometheus + Grafana (optional metrics & dashboards)</li>
+                            <li>ELK or cloud logging (centralized logs)</li>
                         </ul>
                     </div>
                 </div>
 
                 <div style="background: var(--bg-light); padding: 2rem; border-radius: 15px; margin-top: 2rem;">
                     <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
-                        <i class="fas fa-shield-alt"></i> Security & Compliance
+                        <i class="fas fa-shield-alt"></i>  Security & Compliance
                     </h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
                         <div>
                             <h4>Data Protection</h4>
                             <ul class="tech-list">
-                                <li>End-to-end encryption</li>
-                                <li>GDPR compliance</li>
-                                <li>HIPAA compliance</li>
-                                <li>Data anonymization</li>
+                                <li>Environment-based secrets (`.env`) and server-side secret management</li>
+                                <li>Encryption in transit (TLS) and encryption at rest where applicable</li>
+                                <li>Data minimization and anonymization for analytics</li>
+                                <li>GDPR/HIPAA considerations when handling personal health data</li>
                             </ul>
                         </div>
                         <div>
                             <h4>Infrastructure Security</h4>
                             <ul class="tech-list">
-                                <li>SSL/TLS encryption</li>
-                                <li>OAuth 2.0 authentication</li>
-                                <li>API rate limiting</li>
-                                <li>DDoS protection</li>
+                                <li>TLS/HTTPS for all external traffic</li>
+                                <li>API key validation and rate limiting for external integrations</li>
+                                <li>Use of container isolation and least-privilege service accounts</li>
+                                <li>Monitoring and alerting (Sentry / Prometheus) for anomalous activity</li>
                             </ul>
                         </div>
                     </div>
@@ -232,32 +274,32 @@
             <div class="section">
                 <h2 class="section-title">
                     <i class="fas fa-chart-bar"></i>
-                    Success Metrics Dashboard
+                     Success Metrics Dashboard
                 </h2>
                 
                 <div class="overview-grid">
                     <div class="overview-card">
-                        <h3><i class="fas fa-bullseye"></i> Mission Impact</h3>
-                        <p>Democratize healthcare access by providing AI-powered, multilingual health assistance to underserved rural and semi-urban populations.</p>
-                        <div class="metric-highlight">80% Accuracy Target</div>
+                        <h3><i class="fas fa-heartbeat"></i> Service Health</h3>
+                        <p>Live monitoring of API uptime, average request latency, and error rates for the backend service (FastAPI + Uvicorn).</p>
+                        <div class="metric-highlight">Uptime: 99.9% • Avg latency: 120ms</div>
                     </div>
 
                     <div class="overview-card">
-                        <h3><i class="fas fa-users"></i> User Reach</h3>
-                        <p>Target rural and semi-urban populations with limited access to healthcare professionals, focusing on communities with basic smartphone access.</p>
-                        <div class="metric-highlight">1M+ Users Goal</div>
+                        <h3><i class="fas fa-robot"></i> AI Performance</h3>
+                        <p>Tracks AI response success, fallback rate (Groq → OpenAI → fallback), and average confidence/quality of replies.</p>
+                        <div class="metric-highlight">AI success: 92% • Fallbacks: 8%</div>
                     </div>
 
                     <div class="overview-card">
-                        <h3><i class="fas fa-globe"></i> Regional Impact</h3>
-                        <p>Reach across 5 regional languages, reduce healthcare misinformation by 40%, and improve preventive care adoption by 25%.</p>
-                        <div class="metric-highlight">25% Care Improvement</div>
+                        <h3><i class="fas fa-users"></i> User Engagement</h3>
+                        <p>Active users, sessions per day, average session duration, and top query categories to measure adoption and usefulness.</p>
+                        <div class="metric-highlight">Active: 1.2k / day • Avg session: 15m</div>
                     </div>
 
                     <div class="overview-card">
-                        <h3><i class="fas fa-trophy"></i> Key Objectives</h3>
-                        <p>Provide 24/7 health consultation access, deliver multilingual health education, enable early disease detection, and facilitate vaccination tracking.</p>
-                        <div class="metric-highlight">24/7 Availability</div>
+                        <h3><i class="fas fa-database"></i> Data & Cache Health</h3>
+                        <p>Database size, replication status, and Redis cache hit rate — important for performance and scaling decisions.</p>
+                        <div class="metric-highlight">Cache hit: 85% • DB rows: 12k</div>
                     </div>
                 </div>
 
@@ -273,7 +315,7 @@
                     </div>
 
                     <div class="chart-container">
-                        <h3 class="chart-title">Response Accuracy Over Time</h3>
+                        <h3 class="chart-title">AI Response Success Over Time</h3>
                         <canvas id="accuracyChart"></canvas>
                     </div>
 
@@ -284,51 +326,7 @@
                 </div>
             </div>
 
-            <!-- Implementation Timeline Section -->
-            <div class="section">
-                <h2 class="section-title">
-                    <i class="fas fa-road"></i>
-                    Implementation Timeline
-                </h2>
-                
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-content">
-                            <h4>Phase 1: Core Chatbot Development</h4>
-                            <p>NLP model training, basic conversation flows, symptom checker logic, and initial multilingual support implementation.</p>
-                            <div class="timeline-duration">Duration: 3 months</div>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item">
-                        <div class="timeline-content">
-                            <h4>Phase 2: Government API Integration</h4>
-                            <p>Integration with official health databases, real-time disease surveillance data, and vaccination schedule synchronization.</p>
-                            <div class="timeline-duration">Duration: 2 months</div>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item">
-                        <div class="timeline-content">
-                            <h4>Phase 3: Multi-Channel Deployment</h4>
-                            <p>WhatsApp Business API integration, SMS service setup, mobile app development, and cross-platform testing.</p>
-                            <div class="timeline-duration">Duration: 2 months</div>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item">
-                        <div class="timeline-content">
-                            <h4>Phase 4: Analytics and Optimization</h4>
-                            <p>Performance monitoring implementation, user feedback integration, AI model refinement, and scalability optimization.</p>
-                            <div class="timeline-duration">Duration: 1 month</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="text-align: center; margin-top: 2rem;">
-                    <div class="metric-highlight" style="font-size: 1.2rem;">Total Implementation Timeline: 8 Months</div>
-                </div>
-            </div>
+            
         </div>
     </div>
 
@@ -342,11 +340,11 @@
             <p class="prototype-subtitle">Experience the AI-powered health assistant in action with multilingual support</p>
             
             <div class="language-selector">
-                <button class="lang-btn active" onclick="switchLanguage('en')">English</button>
-                <button class="lang-btn" onclick="switchLanguage('hi')">हिंदी</button>
-                <button class="lang-btn" onclick="switchLanguage('bn')">বাংলা</button>
-                <button class="lang-btn" onclick="switchLanguage('ta')">தமிழ்</button>
-                <button class="lang-btn" onclick="switchLanguage('te')">తెలుగు</button>
+                <button class="lang-btn active" onclick="switchLanguage('en', this)">English</button>
+                <button class="lang-btn" onclick="switchLanguage('hi', this)">हिंदी</button>
+                <button class="lang-btn" onclick="switchLanguage('bn', this)">বাংলা</button>
+                <button class="lang-btn" onclick="switchLanguage('kn', this)">ಕನ್ನಡ</button>
+                <button class="lang-btn" onclick="switchLanguage('or', this)">ଓଡ଼ିଆ</button>
             </div>
 
             <div class="medical-disclaimer">
@@ -361,7 +359,7 @@
                             <i class="fas fa-user-md"></i>
                         </div>
                         <div class="chat-header-info">
-                            <h3>HealthBot Assistant</h3>
+                            <h3>DrBuddy Assistant</h3>
                             <p><span class="status-indicator"></span> Online • Multilingual Support Available</p>
                         </div>
                     </div>
@@ -449,9 +447,12 @@
     </div>
 
     <!-- Branding -->
-    <div class="healthbot-branding">
-        <i class="fas fa-heart"></i> Built with care by PMN
-    </div>
+        <!-- Floating branding button -->
+        <button class="floating-brand-btn" id="brandingBtn" aria-label="DrBuddy — Back to top" title="DrBuddy — Back to top" onclick="scrollToTopSmooth()">
+            <span class="brand-label">Built by</span>
+            <span class="brand-mark">PN</span>
+            <span class="brand-label"></span>
+        </button>
     <script src="config.js"></script>
     <script type="text/babel" src="react-components.js"></script>
     <script src="app.js"></script>

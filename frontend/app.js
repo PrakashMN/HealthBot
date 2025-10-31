@@ -2,7 +2,9 @@
         let currentLanguage = `en`;
         let chatHistory = [];
         let messageCount = 0;
-        let soundEnabled = true;
+    let soundEnabled = true;
+    // shared AudioContext so we can resume/unlock it on user gesture (toggle)
+    let audioContext = null;
         let isTyping = false;
 
         // Language translations
@@ -28,20 +30,21 @@
                 prevention: `আমি আপনাকে সুস্থ থাকতে সাহায্য করার জন্য গুরুত্বপূর্ণ প্রতিরোধমূলক স্বাস্থ্যসেবা টিপস শেয়ার করব। আপনি কোন ক্ষেত্রে মনোযোগ দিতে চান?`,
                 emergency: `এটি একটি জরুরি পরিস্থিতি বলে মনে হচ্ছে। আমি তাৎক্ষণিক নির্দেশনা এবং জরুরি যোগাযোগ প্রদান করছি।`
             },
-            ta: {
-                greeting: `வணக்கம்! 👋 நான் உங்கள் AI சுகாதார உதவியாளர். நான் அறிகுறிகள், தடுப்பூசி அட்டவணைகள், தடுப்பு பராமரிப்பு மற்றும் அவசர வழிகாட்டுதலில் உங்களுக்கு உதவ முடியும். இன்று நான் உங்களுக்கு எப்படி உதவ முடியும்?`,
-                symptoms: `உங்கள் அறிகுறிகளை சரிபார்க்க நான் உதவ முடியும். நீங்கள் என்ன அனுபவிக்கிறீர்கள் என்று விவரிக்கவும், மருத்துவ அறிவின் அடிப்படையில் நான் வழிகாட்டுதலை வழங்குவேன்.`,
-                vaccine: `எல்லா வயதினருக்கும் தடுப்பூசி தகவலை என்னால் வழங்க முடியும். உங்களுக்கு என்ன குறிப்பிட்ட தடுப்பூசி தகவல் தேவை?`,
-                prevention: `உங்களை ஆரோக்கியமாக வைத்திருக்க முக்கியமான தடுப்பு சுகாதார குறிப்புகளை நான் பகிர்ந்து கொள்வேன். நீங்கள் எந்த பகுதியில் கவனம் செலுத்த விரும்புகிறீர்கள்?`,
-                emergency: `இது ஒரு அவசரநிலை போல் தெரிகிறது. நான் உடனடி வழிகாட்டுதல் மற்றும் அவசர தொடர்புகளை வழங்குகிறேன்.`
+            kn: {
+                greeting: `ನಮಸ್ಕಾರ! 👋 ನಾನು ನಿಮ್ಮ AI ಆರೋಗ್ಯ ಸಹಾಯಕನು. ಲಕ್ಷಣಗಳು, ಲಸಿಕೆ ವೇಳಾಪಟ್ಟಿ, ತಡೆಗಟ್ಟುವ ಆರೈಕೆ ಮತ್ತು ತುರ್ತು ಮಾರ್ಗದರ್ಶನದಲ್ಲಿ ನಾನು ಸಹಾಯ ಮಾಡುತ್ತೇನೆ. ಇಂದು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಲಿ?`,
+                symptoms: `ನಾನು ನಿಮ್ಮ ಲಕ್ಷಣಗಳನ್ನು ಪರಿಶೀಲಿಸಲು ಸಹಾಯ ಮಾಡಬಲ್ಲೆ. ದಯವಿಟ್ಟು ನೀವು ಅನುಭವಿಸುತ್ತಿರುವುದನ್ನು ವಿವರಿಸಿ; ವೈದ್ಯಕೀಯ ಜ್ಞಾನದ ಆಧಾರದ ಮೇಲೆ ಮಾರ್ಗದರ್ಶನ ನೀಡುತ್ತೇನೆ.`,
+                vaccine: `ಎಲ್ಲ ವಯಸ್ಸಿನವರಿಗೂ ಲಸಿಕೆ ಮಾಹಿತಿಯನ್ನು ನೀಡಬಲ್ಲೆ. ನಿಮಗೆ ಯಾವ ವಿಶೇಷ ಲಸಿಕೆ ಮಾಹಿತಿಯ ಅಗತ್ಯವಿದೆ?`,
+                prevention: `ಆರೋಗ್ಯವಾಗಿರಲು ಮಹತ್ವದ ತಡೆಗಟ್ಟುವ ಆರೋಗ್ಯ ಸಲಹೆಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳುತ್ತೇನೆ. ನೀವು ಯಾವ ವಿಷಯದ ಮೇಲೆ ಗಮನಹರಿಸಲು ಬಯಸುತ್ತೀರಿ?`,
+                emergency: `ಇದು ತುರ್ತು ಪರಿಸ್ಥಿತಿ ಎಂದು ಕಾಣುತ್ತದೆ. ತಕ್ಷಣದ ಮಾರ್ಗದರ್ಶನ ಮತ್ತು ತುರ್ತು ಸಂಪರ್ಕಗಳನ್ನು ನೀಡುತ್ತಿರುವೆ.`
             },
-            te: {
-                greeting: `హలో! 👋 నేను మీ AI ఆరోగ్య సహాయకుడను. నేను లక్షణాలు, టీకా షెడ్యూల్‌లు, నివారణ సంరక్షణ మరియు అత్యవసర మార్గదర్శకత్వంలో మీకు సహాయం చేయగలను. ఈరోజు నేను మీకు ఎలా సహాయం చేయగలను?`,
-                symptoms: `మీ లక్షణాలను తనిఖీ చేయడంలో నేను సహాయం చేయగలను. మీరు ఏమి అనుభవిస్తున్నారో దయచేసి వివరించండి, మరియు వైద్య జ్ఞానం ఆధారంగా నేను మార్గదర్శకత్వం అందిస్తాను.`,
-                vaccine: `అన్ని వయస్సుల వారికి టీకా సమాచారాన్ని నేను అందించగలను. మీకు ఏ నిర్దిష్ట టీకా సమాచారం అవసరం?`,
-                prevention: `మిమ్మల్ని ఆరోగ్యంగా ఉంచడానికి ముఖ్యమైన నివారణ ఆరోగ్య చిట్కాలను నేను పంచుకుంటాను. మీరు ఏ విషయంపై దృష్టి పెట్టాలని అనుకుంటున్నారు?`,
-                emergency: `ఇది అత్యవసర పరిస్థితిగా కనిపిస్తోంది. నేను తక్షణ మార్గదర్శకత్వం మరియు అత్యవసర పరిచయాలను అందిస్తున్నాను.`
-            }
+            or: {
+                greeting: `ନମସ୍କାର! 👋 ମୁଁ ଆପଣଙ୍କ AI ସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ। ଲକ୍ଷଣ, ଟୀକାକରଣ ସୂଚୀ, ପ୍ରତିରୋଧକ ଯତ୍ନ ଏବଂ ଆପତ୍କାଳୀନ ମର୍ଗଦର୍ଶନରେ ମୁଁ ସାହାୟ୍ୟ କରିପାରିବି। ଆଜି ମୁଁ କିପରି ସାହାୟ୍ୟ କରିପାରିବି?`,
+                symptoms: `ମୁଁ ଆପଣଙ୍କ ଲକ୍ଷଣ ଯାଞ୍ଚ କରିବାରେ ସାହାୟ୍ୟ କରିପାରିବି। ଦୟାକରି ଆପଣ କ’ଣ ଅନୁଭବୁଛନ୍ତି ଲେଖନ୍ତୁ; ଚିକିତ୍ସା ଜ୍ଞାନ ଆଧାରରେ ମୁଁ ପରାମର୍ଶ ଦେବି।`,
+                vaccine: `ସମସ୍ତ ବୟସର ଲୋକଙ୍କ ପାଇଁ ଟୀକାକରଣ ସମ୍ବନ୍ଧୀୟ ସୂଚନା ଦେଇପାରିବି। କେଉଁ ବିଶେଷ ଟୀକା ବିଷୟରେ ଆପଣ ଜାଣିବାକୁ ଚାହୁଁଛନ୍ତି?`,
+                prevention: `ସୁସ୍ଥ ରହିବା ପାଇଁ ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ ପ୍ରତିରୋଧକ ସ୍ୱାସ୍ଥ୍ୟ ସଳହ ଦେବି। ଆପଣ କେଉଁ କ୍ଷେତ୍ରରେ ଧ୍ୟାନ ଦେବାକୁ ଇଚ୍ଛା କରୁଛନ୍ତି?`,
+                emergency: `ଏହା ଆପତ୍କାଳୀନ ପରିସ୍ଥିତି ଭଳି ଲାଗୁଛି। ମୁଁ ତତ୍କ୍ଷଣାତ୍ ମର୍ଗଦର୍ଶନ ଏବଂ ଆପତ୍କାଳୀନ ଯୋଗାଯୋଗ ସଂଖ୍ୟା ଦେଉଛି।`
+            },
+            /* removed unused language blocks (ta, te) to reduce bundle size */
         };
 
         // Comprehensive health responses database
@@ -302,63 +305,11 @@ Where are you planning to travel, and what type of activities will you be doing?
                 }
             },
             prevention: {
+                // Trimmed general tips to keep bundle size small; expand later if needed
                 general: [
-                    `🧼 **Hand Hygiene Excellence**
-Wash hands with soap for 20+ seconds, especially:
-• Before eating or preparing food
-• After using restroom
-• After coughing/sneezing
-• When returning home
-• Use alcohol-based sanitizer (60%+ alcohol) when soap unavailable`,
-
-                    `😷 **Respiratory Protection**
-• Wear masks in crowded indoor spaces
-• Maintain 6 feet distance when possible
-• Cover coughs/sneezes with elbow, not hands
-• Avoid touching face, especially eyes, nose, mouth
-• Ensure good ventilation in indoor spaces`,
-
-                    `💧 **Optimal Hydration Strategy**
-• Drink 8-10 glasses of water daily
-• More if active, hot climate, or illness
-• Monitor urine color (pale yellow = good)
-• Include electrolytes during heavy sweating
-• Limit alcohol and excessive caffeine`,
-
-                    `🥗 **Nutritional Immunity Boosting**
-• 5+ servings fruits/vegetables daily
-• Include vitamin C (citrus, berries, leafy greens)
-• Zinc sources (nuts, seeds, legumes)
-• Vitamin D (sunlight, fatty fish, fortified foods)
-• Limit processed foods, excess sugar`,
-
-                    `🏃‍♂️ **Physical Activity Guidelines**
-• 150+ minutes moderate exercise weekly
-• Include strength training 2+ days/week
-• Take stairs instead of elevators
-• Park farther away for extra walking
-• Exercise boosts immune system significantly`,
-
-                    `😴 **Sleep Quality Optimization**
-• 7-9 hours nightly for adults
-• Consistent sleep/wake times
-• Cool, dark, quiet bedroom
-• No screens 1 hour before bed
-• Avoid large meals, caffeine before bedtime`,
-
-                    `🧘‍♀️ **Stress Management Techniques**
-• Practice deep breathing exercises
-• Regular meditation (even 5-10 minutes daily)
-• Physical activity reduces stress hormones
-• Maintain social connections
-• Seek professional help if needed`,
-
-                    `☀️ **Sun Protection Essentials**
-• SPF 30+ sunscreen, reapply every 2 hours
-• Seek shade during peak hours (10 AM - 4 PM)
-• Wear protective clothing, wide-brimmed hats
-• Sunglasses with UV protection
-• Be extra careful near water, sand, snow`
+                    `🧼 Wash hands frequently with soap for 20+ seconds`,
+                    `😷 Wear masks in crowded indoor spaces and ensure good ventilation`,
+                    `💧 Stay hydrated and rest when ill; seek care for severe symptoms`
                 ],
                 seasonal: {
                     monsoon: `🌧️ **Monsoon Health Protection**
@@ -568,17 +519,23 @@ Would you like me to provide more specific guidance?`;
         }
 
         // Language switching with enhanced translations
-        function switchLanguage(lang) {
+        function switchLanguage(lang, btnEl) {
             currentLanguage = lang;
-            
+
+            // Update active button state safely
             const langBtns = document.querySelectorAll(`.lang-btn`);
             langBtns.forEach(btn => btn.classList.remove(`active`));
-            event.target.classList.add(`active`);
-            
+            if (btnEl) {
+                btnEl.classList.add(`active`);
+            }
+
+            // Fallback to English if requested language is missing
+            const t = translations[lang] || translations['en'];
+
             const chatMessages = document.getElementById(`chatMessages`);
             chatMessages.innerHTML = `
                 <div class="message bot">
-                    ${translations[lang].greeting}
+                    ${t.greeting}
                     <span class="message-time">${getCurrentTime()}</span>
                     <div class="message-feedback">
                         <button class="feedback-btn" onclick="provideFeedback(this, 'positive')">
@@ -590,7 +547,7 @@ Would you like me to provide more specific guidance?`;
                     </div>
                 </div>
             `;
-            
+
             chatHistory = [];
             messageCount = 0;
         }
@@ -763,27 +720,75 @@ Would you like me to provide more specific guidance?`;
         }
 
         function playNotificationSound() {
-            // Create a subtle notification sound using Web Audio API
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.value = 800;
-            oscillator.type = `sine`;
-            
-            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.3);
+            if (!soundEnabled) return;
+            try {
+                // create or reuse a shared AudioContext
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+
+                // Some browsers start AudioContext in suspended state until a user gesture
+                if (audioContext.state === 'suspended') {
+                    // try to resume; it's fine if the promise resolves later
+                    audioContext.resume().catch(() => {});
+                }
+
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.frequency.value = 800;
+                oscillator.type = `sine`;
+
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+            } catch (err) {
+                console.warn('playNotificationSound failed:', err);
+            }
         }
 
         // Chat control functions
         function scrollToChatbot() {
             document.getElementById(`prototype`).scrollIntoView({ behavior: `smooth` });
+        }
+
+        // Robust smooth scroll to top: uses native smooth scrolling when available,
+        // otherwise falls back to an rAF-based animation for older browsers.
+        function scrollToTopSmooth() {
+            try {
+                // native support
+                if ('scrollBehavior' in document.documentElement.style) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+            } catch (e) {
+                // ignore and fallback
+            }
+
+            // Fallback animation
+            const start = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+            const duration = 600; // ms
+            const startTime = performance.now();
+
+            function easeInOutCubic(t) {
+                return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            }
+
+            function step(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = easeInOutCubic(progress);
+                const current = Math.round(start + (0 - start) * eased);
+                window.scrollTo(0, current);
+                if (progress < 1) requestAnimationFrame(step);
+            }
+
+            requestAnimationFrame(step);
         }
 
         function clearChat() {
@@ -828,9 +833,20 @@ Would you like me to provide more specific guidance?`;
             if (soundEnabled) {
                 soundIcon.className = `fas fa-volume-up`;
                 soundText.textContent = `Sound On`;
+                // Ensure the AudioContext is created/resumed on this user gesture so subsequent sounds play
+                try {
+                    if (!audioContext) {
+                        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    }
+                    if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
+                } catch (err) {
+                    console.warn('Unable to initialize audio context:', err);
+                }
             } else {
                 soundIcon.className = `fas fa-volume-mute`;
                 soundText.textContent = `Sound Off`;
+                // Optionally suspend audio to conserve resources
+                try { if (audioContext && audioContext.state === 'running') audioContext.suspend().catch(() => {}); } catch (e) {}
             }
         }
 
@@ -934,10 +950,10 @@ Would you like me to provide more specific guidance?`;
                 new Chart(regionalCtx, {
                     type: `radar`,
                     data: {
-                        labels: [`Hindi`, `English`, `Bengali`, `Tamil`, `Telugu`, `Marathi`],
+                        labels: [`Hindi`, `English`, `Bengali`, `Kannada`, `Odia`],
                         datasets: [{
                             label: `Usage %`,
-                            data: [28, 25, 18, 12, 10, 7],
+                            data: [28, 25, 18, 12, 10],
                             backgroundColor: `rgba(0, 102, 204, 0.2)`,
                             borderColor: `#0066cc`,
                             pointBackgroundColor: `#0066cc`
@@ -960,7 +976,12 @@ Would you like me to provide more specific guidance?`;
         // AI Assistant Widget Functions
         function toggleAIChat() {
             const widget = document.getElementById('aiChatWidget');
+            if (!widget) return;
+            const willOpen = !widget.classList.contains('active');
             widget.classList.toggle('active');
+            // optional a11y sync if the trigger button is present
+            const trigger = document.querySelector('.ai-assistant-widget .ai-button');
+            if (trigger) trigger.setAttribute('aria-expanded', String(willOpen));
         }
 
         function sendAIMessage() {
@@ -1026,17 +1047,10 @@ Would you like me to provide more specific guidance?`;
             });
         }
 
-        function addParallaxEffect() {
-            window.addEventListener('scroll', () => {
-                const scrolled = window.pageYOffset;
-                const parallaxElements = document.querySelectorAll('.header::before');
-                
-                parallaxElements.forEach(el => {
-                    const speed = 0.5;
-                    el.style.transform = `translateY(${scrolled * speed}px)`;
-                });
-            });
-        }
+        // removed addParallaxEffect(): the previous implementation used an invalid
+        // selector (".header::before") and caused runtime issues in some browsers.
+        // Parallax visuals were non-essential for the prototype and were removed to
+        // reduce runtime overhead and avoid selector errors.
 
         function addHoverEffects() {
             // Add magnetic effect to buttons
@@ -1055,34 +1069,36 @@ Would you like me to provide more specific guidance?`;
             });
         }
 
-        function addTypingEffect() {
-            const textElements = document.querySelectorAll('.header h1, .prototype-title');
-            
-            textElements.forEach(element => {
-                const text = element.textContent;
-                element.textContent = '';
-                
-                let i = 0;
-                const typeWriter = () => {
-                    if (i < text.length) {
-                        element.textContent += text.charAt(i);
-                        i++;
-                        setTimeout(typeWriter, 100);
-                    }
-                };
-                
-                setTimeout(typeWriter, 500);
-            });
-        }
+        // removed addTypingEffect(): a decorative typing animation was not used
+        // in the current UX flow and added unnecessary complexity. Keeping the
+        // DOM and CSS simple improves performance on low-end devices.
 
         // Initialize the page
         document.addEventListener(`DOMContentLoaded`, function() {
+            // Chart.js theme defaults (if Chart is present)
+            try {
+                if (window.Chart) {
+                    Chart.defaults.font.family = 'Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial';
+                    Chart.defaults.color = getComputedStyle(document.documentElement).getPropertyValue('--text-dark') || '#0b1a2b';
+                    Chart.defaults.plugins.legend.labels.color = getComputedStyle(document.documentElement).getPropertyValue('--text-dark') || '#0b1a2b';
+                }
+            } catch (_) {}
+
+            // Ensure floating AI widget starts closed (no surprise pop-ups)
+            (function ensureChatWidgetClosed() {
+                try {
+                    const widget = document.getElementById('aiChatWidget');
+                    if (widget) widget.classList.remove('active');
+                    const trigger = document.querySelector('.ai-assistant-widget .ai-button');
+                    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+                } catch (_) {}
+            })();
+
             // Initialize charts
             setTimeout(initializeCharts, 100);
             
             // Initialize modern animations
             initScrollAnimations();
-            addParallaxEffect();
             addHoverEffects();
             
             // Set up event listeners
@@ -1104,4 +1120,6 @@ Would you like me to provide more specific guidance?`;
                     firstMessage.style.animation = `messageSlide 0.6s ease`;
                 }
             }, 500);
+
+            // Removed scroll-based animation reduction to prevent UI from popping after scroll ends
         });

@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from app.ai_service import ai_assistant
 import asyncio
+import time
 from typing import Optional
 
 app = FastAPI(title="HealthBot AI API", version="1.0.0")
@@ -11,7 +12,7 @@ app = FastAPI(title="HealthBot AI API", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -49,7 +50,8 @@ async def chat_with_ai(chat: ChatMessage):
             "success": True,
             "response": ai_response,
             "language": chat.language,
-            "timestamp": asyncio.get_event_loop().time()
+            # epoch seconds for easier client handling/logging
+            "timestamp": time.time()
         }
         
     except Exception as e:
