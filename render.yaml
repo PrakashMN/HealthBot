@@ -7,6 +7,9 @@ services:
     plan: free
     dockerfile: ./backend/Dockerfile
     healthCheckPath: /
+    envVars:
+      - key: GROQ_API_KEY
+        value: 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
   - type: static
     name: frontend
     repo: https://github.com/PrakashMN/HealthBot
