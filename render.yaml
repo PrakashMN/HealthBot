@@ -5,14 +5,15 @@ services:
     repo: https://github.com/PrakashMN/HealthBot
     region: singapore
     plan: free
-    dockerfile: ./backend/Dockerfile
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
     healthCheckPath: /
     envVars:
       - key: GROQ_API_KEY
         value: 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
-
-staticSites:
-  - name: frontend
+  - type: web
+    name: frontend
+    runtime: static
     repo: https://github.com/PrakashMN/HealthBot
     region: singapore
     plan: free
