@@ -10,8 +10,9 @@ services:
     envVars:
       - key: GROQ_API_KEY
         value: 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
-  - type: static_site
-    name: frontend
+
+staticSites:
+  - name: frontend
     repo: https://github.com/PrakashMN/HealthBot
     region: singapore
     plan: free
