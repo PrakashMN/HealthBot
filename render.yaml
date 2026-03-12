@@ -4,6 +4,7 @@ services:
     runtime: docker
     repo: https://github.com/PrakashMN/HealthBot
     region: singapore
+    plan: free
     dockerfilePath: ./backend/Dockerfile
     dockerContext: .
     healthCheckPath: /
