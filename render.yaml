@@ -15,7 +15,6 @@ services:
     name: frontend
     runtime: static
     repo: https://github.com/PrakashMN/HealthBot
-    region: singapore
     plan: free
     rootDir: frontend-v2
     buildCommand: npm install && npm run build
