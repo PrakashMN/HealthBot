@@ -6,7 +6,7 @@ services:
     region: singapore
     plan: free
     dockerfilePath: ./backend/Dockerfile
-    dockerContext: .
+    dockerContext: ./backend
     healthCheckPath: /
     envVars:
       - key: GROQ_API_KEY
